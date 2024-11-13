@@ -1,10 +1,9 @@
 #include "../include/Player.h"
 #include <iostream>
-
+int Player::playerIdCounter = 0;
 Player::Player(std::string name, Civilization* civ)
     : name(name), civilization(civ), gold(civ->getStartingGold()) {
-         std::cout << "Initialized Player with Civilization: " << civilization->getName() 
-              << ", Starting Gold: " << gold << "\n";
+    playerID = playerIdCounter++;
     }
 
 void Player::addUnit(Unit* unit) {
@@ -13,6 +12,14 @@ void Player::addUnit(Unit* unit) {
 
 void Player::addTown(Town* town) {
     towns.push_back(town);
+}
+void Player::removeUnit(int unitId) {
+    for (auto it = units.begin(); it != units.end(); ++it) {
+        if ((*it)->getId() == unitId) {
+            units.erase(it);
+            break;
+        }
+    }
 }
 
 

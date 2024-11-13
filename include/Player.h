@@ -12,7 +12,7 @@
 
 class Player {
 private:
-    static int idCounter;  // Static counter for generating unique IDs
+    static int playerIdCounter;  // Static counter for generating unique IDs
     int playerID;          // Unique ID for the player
     std::unordered_map<std::string, int> resources; // Stores resources such as gold, wood, etc.
 
@@ -32,7 +32,7 @@ public:
     void addResource(std::string resourceName, int amount);  // Add resource to the player's stock
     void gatherResource(std::string resourceName, int amount);  // Gather resources (add to stock)
     void spendResource(std::string resourceName, int amount);   // Spend resources (decrease stock)
-
+    void removeUnit(int unitId);  // Remove a unit from the player's list
     // Display information about the player
     void displayInfo() const;
 

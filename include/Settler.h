@@ -10,7 +10,6 @@
 
 class Settler : public Unit {
 private:
-    bool hasTurnedIntoTown; // Flag to check if the settler has turned into a town
     int movementSpeed; // Movement speed of the settler
 public:
     Settler(int health, int attackPower, int defense, int x, int y);

@@ -1,8 +1,8 @@
 #ifndef GRID_H
 #define GRID_H
 
-const int GRID_WIDTH = 10;
-const int GRID_HEIGHT = 10;
+const int GRID_WIDTH = 100;
+const int GRID_HEIGHT = 100;
 
 class Grid {
 public:
@@ -11,6 +11,8 @@ public:
     Grid();
     bool isCellOccupied(int x, int y) const;
     void setCell(int x, int y, int value);
+    int getWidth() const;
+    int getHeight() const;
 };
 
 #endif // GRID_H

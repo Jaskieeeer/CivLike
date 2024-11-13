@@ -12,3 +12,11 @@ bool Grid::isCellOccupied(int x, int y) const {
 void Grid::setCell(int x, int y, int value) {
     cells[x][y] = value;
 }
+
+int Grid::getWidth() const {
+    return GRID_WIDTH;
+}
+
+int Grid::getHeight() const {
+    return GRID_HEIGHT;
+}
