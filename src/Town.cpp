@@ -45,7 +45,7 @@ void Town::spawnUnit(std::string unitType) {
     // For demonstration purposes, we'll just print a message
     std::cout << "Town " << townID << " is spawning a unit!" << std::endl;
     if(unitType == "Settler"){
-        trainUnit(new Settler(100, 10, 5, x, y));
+        trainUnit(new Settler( x, y));
     }
     // else if(unitType == "Warrior"){
     //     trainUnit(new Warrior(100, 20, 10, x, y));

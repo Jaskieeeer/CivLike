@@ -4,8 +4,13 @@
 #include "../include/Globals.h"
 #include <iostream>
 
-Settler::Settler(int health, int attackPower, int defense, int x, int y)
-    : Unit( health, attackPower,defense, x, y) {}
+Settler::Settler(int x, int y)
+    : Unit(x, y) {
+        health=100;
+        attackPower=10;
+        defense=5;
+        movementSpeed=2;
+    }
 
 void Settler::transformIntoTown(Player* player) {
     if (globalGrid.canSpawnTown(x,y)) {

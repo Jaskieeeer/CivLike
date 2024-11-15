@@ -1,9 +1,13 @@
 #include "../include/Unit.h"
 #include <iostream>
 int Unit::idCounter = 0;  
-Unit::Unit(int health, int attackPower, int defense, int x, int y)
-    : health(health), attackPower(attackPower), defense(defense),x(x),y(y) {
+Unit::Unit(int x, int y)
+    :x(x),y(y){
         id=++idCounter;
+        health=0;
+        attackPower=0;
+        defense=0;
+        movementSpeed=0;
     }
 
 void Unit::move(int dx, int dy) {
@@ -27,6 +31,19 @@ int Unit::getY() const {
 }
 int Unit::getId() const {
     return id;  
+}
+
+int Unit::getHealth() const {
+    return health;
+}
+int Unit::getAttack() const {
+    return attackPower;
+}
+int Unit::getDefense() const {
+    return defense;
+}
+int Unit::getMovementSpeed() const{
+    return movementSpeed;
 }
 
 void Unit::displayStatus() {

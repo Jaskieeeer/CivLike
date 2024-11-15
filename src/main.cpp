@@ -30,8 +30,8 @@ int main() {
     Player player2("Bob", new RomanCiv());
     
     std::vector<std::pair<int, int>> spawnPoints = generateSpawnPoints(2, globalGrid.getWidth(), globalGrid.getHeight());
-    player1.addUnit(new Settler (100, 10, 5, spawnPoints[0].first, spawnPoints[0].second));
-    player2.addUnit(new Settler (100, 10, 5, spawnPoints[1].first, spawnPoints[1].second)); 
+    player1.addUnit(new Settler (spawnPoints[0].first, spawnPoints[0].second));
+    player2.addUnit(new Settler (spawnPoints[1].first, spawnPoints[1].second)); 
     for (int i = 0; i < size(player2.units); ++i) {
         player2.units[i]->displayStatus();
     }
@@ -44,7 +44,7 @@ int main() {
     player1.loseTown(player1.getTown(1),&player2);
     player1.displayInfo();
     player2.displayInfo();
-    player1.addUnit(new Settler (100, 10, 5, spawnPoints[0].first, spawnPoints[0].second));
+    player1.addUnit(new Settler ( spawnPoints[0].first, spawnPoints[0].second));
     player1.displayInfo();
     player1.transformUnitIntoTown(3);
     player1.displayInfo();
