@@ -13,9 +13,7 @@ void Town::addBuilding(const Building& building) {
     buildings.push_back(building);
 }
 
-void Town::trainUnit(Unit* unit) {
-    garrison.push_back(unit);
-}
+
 
 void Town::produceResources() {
     // Resource production logic can be based on buildings in the town
@@ -41,11 +39,11 @@ int Town::getTownId() const {
     return townID;
 }
 
-void Town::spawnUnit(std::string unitType) {
+void Town::spawnUnit(std::string unitType , Player* player) {
     // For demonstration purposes, we'll just print a message
     std::cout << "Town " << townID << " is spawning a unit!" << std::endl;
     if(unitType == "Settler"){
-        trainUnit(new Settler( x, y));
+        player->addUnit(new Settler( x, y)); //create a new settler 
     }
     // else if(unitType == "Warrior"){
     //     trainUnit(new Warrior(100, 20, 10, x, y));

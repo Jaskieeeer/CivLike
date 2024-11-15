@@ -21,11 +21,10 @@ public:
     Player* getOwner() const;
     void setOwner(Player* player);
     void addBuilding(const Building& building);
-    void trainUnit(Unit* unit);  // Add unit to the garrison
     void produceResources();
     void displayTownStatus(); // For debugging or displaying town details
     int getTownId() const;  // Getter for town ID
-    void spawnUnit(std::string unitType);  // Spawn a unit
+    void spawnUnit(std::string unitType, Player * player);  // Spawn a unit
 };
 
 #endif // TOWN_H
