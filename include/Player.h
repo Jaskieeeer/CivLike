@@ -33,6 +33,7 @@ public:
     void gatherResource(std::string resourceName, int amount);  // Gather resources (add to stock)
     void spendResource(std::string resourceName, int amount);   // Spend resources (decrease stock)
     void removeUnit(int unitId);  // Remove a unit from the player's list
+    void loseTown(Town* town,Player* player = nullptr);  // Remove a town from the player's list
     // Display information about the player
     void displayInfo() const;
 

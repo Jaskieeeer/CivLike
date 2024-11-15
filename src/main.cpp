@@ -58,3 +58,17 @@ int main() {
 
     return 0;
 }
+
+// TODO 
+// 1. Implement spawnings of units in towns (TWR2-like)1 
+// 2. Implement resource gathering and spending(TWR2-like)
+// 3. Implement combat between units (Civ-like)
+// 4. Implement building construction (TWR2-like) 2
+// 5. Implement unit movement and pathfinding (Civ-like)
+// 6. Implement end game conditions
+// 7. Implement player turns and actions
+// 8. Implement AI for computer-controlled players
+// 9. Implement game state saving and loading
+// 10. Implement game UI and user interactions
+// 11. Implement game settings and options
+// 12. Implement game balance and tuning

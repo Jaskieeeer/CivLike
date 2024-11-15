@@ -3,7 +3,7 @@
 int Unit::idCounter = 0;  
 Unit::Unit(int health, int attackPower, int defense, int x, int y)
     : health(health), attackPower(attackPower), defense(defense),x(x),y(y) {
-        id=idCounter++;
+        id=++idCounter;
     }
 
 void Unit::move(int dx, int dy) {
