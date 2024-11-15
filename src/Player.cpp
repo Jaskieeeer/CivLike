@@ -1,6 +1,7 @@
 #include "../include/Player.h"
 #include <iostream>
 #include <algorithm>
+#include "../include/Settler.h"
 int Player::playerIdCounter = 0;
 Player::Player(std::string name, Civilization* civ)
     : name(name), civilization(civ), gold(civ->getStartingGold()) {
@@ -26,6 +27,44 @@ void Player::removeUnit(int unitId) {
             units.erase(it);
             break;
         }
+    }
+}
+
+Unit* Player::getUnit(int unitID) {
+    for (Unit* unit : units) {
+        if (unit->getId() == unitID) {  // Assuming Unit has a getID() method
+            return unit;
+        }
+    }
+    return nullptr;  // Return nullptr if unit with the given ID is not found
+}
+
+Town* Player::getTown(int townID) {
+    for (Town* town : towns) {
+        if (town->getTownId() == townID) {
+            return town;
+        }
+    }
+    return nullptr;  // Return nullptr if town with the given ID is not found
+}
+
+void Player::transformUnitIntoTown(int unitID) {
+    // Get the unit by ID
+    Unit* unit = getUnit(unitID);
+    if (unit != nullptr) {
+        // Try to cast the Unit pointer to a Settler pointer
+        Settler* settler = dynamic_cast<Settler*>(unit);
+        if (settler != nullptr) {
+            // If successful, call transformIntoTown
+            settler->transformIntoTown(this);
+           
+        } else {
+            // The unit exists, but is not a Settler
+            std::cout << "Unit with ID " << unitID << " is not a Settler and cannot transform into a town." << std::endl;
+        }
+    } else {
+        // The unit was not found
+        std::cout << "Unit with ID " << unitID << " not found." << std::endl;
     }
 }
 

@@ -32,3 +32,4 @@ int Unit::getId() const {
 void Unit::displayStatus() {
     std::cout << "Unit ID: " << id << " at (" << x << ", " << y << ") with health: " << health << std::endl;
 }
+

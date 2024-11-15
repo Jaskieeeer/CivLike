@@ -7,6 +7,7 @@
 #include "../include/Civilization.h"
 #include "../include/RomanCiv.h"
 #include "../include/Settler.h"
+#include "../include/globals.h"
 std::vector<std::pair<int, int>> generateSpawnPoints(int numPlayers, int gridWidth, int gridHeight) 
     {
         std::vector<std::pair<int, int>> spawnPoints;
@@ -27,14 +28,25 @@ int main() {
     TurnManager turnManager;
     Player player1("Alice", new RomanCiv());
     Player player2("Bob", new RomanCiv());
-    Grid grid;
-    std::vector<std::pair<int, int>> spawnPoints = generateSpawnPoints(2, grid.getWidth(), grid.getHeight());
+    
+    std::vector<std::pair<int, int>> spawnPoints = generateSpawnPoints(2, globalGrid.getWidth(), globalGrid.getHeight());
     player1.addUnit(new Settler (100, 10, 5, spawnPoints[0].first, spawnPoints[0].second));
     player2.addUnit(new Settler (100, 10, 5, spawnPoints[1].first, spawnPoints[1].second)); 
-    for (int i = 0; i < size(player1.units); ++i) {
-        player1.units[i]->displayStatus();
+    for (int i = 0; i < size(player2.units); ++i) {
+        player2.units[i]->displayStatus();
     }
     bool isGameOver = false;
+    player1.displayInfo();
+    player2.displayInfo();
+    player1.transformUnitIntoTown(1);
+    player1.displayInfo();
+    player1.getTown(1)->displayTownStatus();
+    player1.loseTown(player1.getTown(1),&player2);
+    player1.displayInfo();
+    player2.displayInfo();
+    player1.addUnit(new Settler (100, 10, 5, spawnPoints[0].first, spawnPoints[0].second));
+    player1.displayInfo();
+    player1.transformUnitIntoTown(3);
     player1.displayInfo();
     // game loop
     // while (!isGameOver) {
@@ -59,16 +71,3 @@ int main() {
     return 0;
 }
 
-// TODO 
-// 1. Implement spawnings of units in towns (TWR2-like)1 
-// 2. Implement resource gathering and spending(TWR2-like)
-// 3. Implement combat between units (Civ-like)
-// 4. Implement building construction (TWR2-like) 2
-// 5. Implement unit movement and pathfinding (Civ-like)
-// 6. Implement end game conditions
-// 7. Implement player turns and actions
-// 8. Implement AI for computer-controlled players
-// 9. Implement game state saving and loading
-// 10. Implement game UI and user interactions
-// 11. Implement game settings and options
-// 12. Implement game balance and tuning

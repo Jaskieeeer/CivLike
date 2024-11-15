@@ -1,14 +1,23 @@
 #include "../include/Settler.h"
 #include "../include/Town.h"
+#include "../include/Grid.h"
+#include "../include/Globals.h"
+#include <iostream>
 
 Settler::Settler(int health, int attackPower, int defense, int x, int y)
     : Unit( health, attackPower,defense, x, y) {}
 
 void Settler::transformIntoTown(Player* player) {
-    Town* newTown = new Town(getX(), getY(), player);  // Dynamically allocate a new Town
-    player->addTown(newTown);  // Add the new town to the player's town list
+    if (globalGrid.canSpawnTown(x,y)) {
+        Town* newTown = new Town(getX(), getY(), player);  // Dynamically allocate a new Town
+        player->addTown(newTown);  // Add the new town to the player's town list
+        globalGrid.setCell(x, y, Cell::Type::TOWN, newTown->getTownId());  // Update the grid
+        player->removeUnit(getId());  // Remove the settler from the player's unit list
 
-    // TODO: Remove the settler from the player's list of units
+    }else{
+        std::cout << "Cannot spawn town here!" << std::endl;
+    }
+    
 }
 
 

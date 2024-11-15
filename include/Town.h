@@ -4,6 +4,7 @@
 #include <vector>
 #include "Building.h"
 #include "Unit.h"
+#include <string>
 
 class Player;  // Forward declaration
 
@@ -23,6 +24,8 @@ public:
     void trainUnit(Unit* unit);  // Add unit to the garrison
     void produceResources();
     void displayTownStatus(); // For debugging or displaying town details
+    int getTownId() const;  // Getter for town ID
+    void spawnUnit(std::string unitType);  // Spawn a unit
 };
 
 #endif // TOWN_H

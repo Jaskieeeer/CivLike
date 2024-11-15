@@ -34,11 +34,16 @@ public:
     void spendResource(std::string resourceName, int amount);   // Spend resources (decrease stock)
     void removeUnit(int unitId);  // Remove a unit from the player's list
     void loseTown(Town* town,Player* player = nullptr);  // Remove a town from the player's list
+    void transformUnitIntoTown(int unitID);  // Transform a settler unit into a town
     // Display information about the player
     void displayInfo() const;
 
+
     // Getter for Player ID
     int getPlayerID() const;
+    Unit* getUnit(int unitID);
+    Town* getTown(int townID);
+
 };
 
 #endif // PLAYER_H
