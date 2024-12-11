@@ -4,8 +4,9 @@
 #include "../include/Globals.h"
 #include <iostream>
 
-Settler::Settler(int x, int y)
-    : Unit(x, y) {
+Settler::Settler(int x, int y, Player* player)
+    : Unit(x, y, player) {
+        
         health=100;
         attackPower=10;
         defense=5;

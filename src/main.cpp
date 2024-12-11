@@ -28,23 +28,20 @@ int main() {
     TurnManager turnManager;
     Player player1("Alice", new RomanCiv());
     Player player2("Bob", new RomanCiv());
-    
     std::vector<std::pair<int, int>> spawnPoints = generateSpawnPoints(2, globalGrid.getWidth(), globalGrid.getHeight());
-    player1.addUnit(new Settler (spawnPoints[0].first, spawnPoints[0].second));
-    player2.addUnit(new Settler (spawnPoints[1].first, spawnPoints[1].second)); 
-    for (int i = 0; i < size(player2.units); ++i) {
-        player2.units[i]->displayStatus();
-    }
+    player1.addUnit(new Settler (spawnPoints[0].first, spawnPoints[0].second,&player1));
+    player2.addUnit(new Settler (spawnPoints[1].first, spawnPoints[1].second,&player2)); 
     bool isGameOver = false;
     player1.displayInfo();
     player2.displayInfo();
+
     player1.transformUnitIntoTown(1);
     player1.displayInfo();
     player1.getTown(1)->displayTownStatus();
     player1.loseTown(player1.getTown(1),&player2);
     player1.displayInfo();
     player2.displayInfo();
-    player1.addUnit(new Settler ( spawnPoints[0].first, spawnPoints[0].second));
+    player1.addUnit(new Settler ( spawnPoints[0].first, spawnPoints[0].second,&player1));
     player1.displayInfo();
     player1.transformUnitIntoTown(3);
     player1.displayInfo();

@@ -31,6 +31,14 @@ Player* Town::getOwner() const {
     return owner;
 }
 
+int Town::getX() const {
+    return x;
+}
+
+int Town::getY() const {
+    return y;
+}
+
 void Town::setOwner(Player* player) {
     owner = player;
 }
@@ -40,10 +48,9 @@ int Town::getTownId() const {
 }
 
 void Town::spawnUnit(std::string unitType , Player* player) {
-    // For demonstration purposes, we'll just print a message
     std::cout << "Town " << townID << " is spawning a unit!" << std::endl;
     if(unitType == "Settler"){
-        player->addUnit(new Settler( x, y)); //create a new settler 
+        player->addUnit(new Settler( x, y,player)); //create a new settler 
     }
     // else if(unitType == "Warrior"){
     //     trainUnit(new Warrior(100, 20, 10, x, y));

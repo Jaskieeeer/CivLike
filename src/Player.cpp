@@ -12,40 +12,14 @@ void Player::addUnit(Unit* unit) {
     units.push_back(unit);
 }
 
-void Player::addTown(Town* town) {
-    towns.push_back(town);
-}
-void Player::loseTown(Town* town, Player* conqueror) {
-    towns.erase(std::remove(towns.begin(), towns.end(), town), towns.end());
-    town->setOwner(conqueror);  // Transfer ownership to the conqueror
-    conqueror->addTown(town);  // Add the town to the conqueror's list
-}
-
 void Player::removeUnit(int unitId) {
     for (auto it = units.begin(); it != units.end(); ++it) {
         if ((*it)->getId() == unitId) {
+            delete *it;
             units.erase(it);
             break;
         }
     }
-}
-
-Unit* Player::getUnit(int unitID) {
-    for (Unit* unit : units) {
-        if (unit->getId() == unitID) {  // Assuming Unit has a getID() method
-            return unit;
-        }
-    }
-    return nullptr;  // Return nullptr if unit with the given ID is not found
-}
-
-Town* Player::getTown(int townID) {
-    for (Town* town : towns) {
-        if (town->getTownId() == townID) {
-            return town;
-        }
-    }
-    return nullptr;  // Return nullptr if town with the given ID is not found
 }
 
 void Player::transformUnitIntoTown(int unitID) {
@@ -67,6 +41,76 @@ void Player::transformUnitIntoTown(int unitID) {
         std::cout << "Unit with ID " << unitID << " not found." << std::endl;
     }
 }
+
+void Player::addTown(Town* town) {
+    towns.push_back(town);
+}
+
+void Player::loseTown(Town* town, Player* conqueror) {
+    towns.erase(std::remove(towns.begin(), towns.end(), town), towns.end());
+    if(conqueror!=nullptr){
+        conqueror->addTown(town);
+        town->setOwner(conqueror);
+    }
+}
+
+void Player::addResource(std::string resourceName, int amount) {
+    resources[resourceName] += amount;
+}
+
+void Player::spendResource(std::string resourceName, int amount) {
+    if (resources[resourceName] < amount) {
+        std::cout << "Insufficient " << resourceName << " to spend " << amount << std::endl;
+        return;
+    }
+    resources[resourceName] -= amount;
+}
+
+int Player::getPlayerID() const {
+    return playerID;
+}
+
+const std::string& Player::getName() const {
+    return name;
+}
+
+Civilization* Player::getCivilization() const {
+    return civilization;
+}
+
+const std::unordered_map<std::string, int>& Player::getResources() const {
+    return resources;
+}
+
+const std::vector<Unit*>& Player::getUnits() const {
+    return units;
+}
+
+Unit* Player::getUnit(int unitID) const{
+    for (Unit* unit : units) {
+        if (unit->getId() == unitID) {  // Assuming Unit has a getID() method
+            return unit;
+        }
+    }
+    return nullptr;  // Return nullptr if unit with the given ID is not found
+}
+
+
+
+const std::vector<Town*>& Player::getTowns() const {
+    return towns;
+}
+
+Town* Player::getTown(int townID) const {
+    for (Town* town : towns) {
+        if (town->getTownId() == townID) {
+            return town;
+        }
+    }
+    return nullptr;  // Return nullptr if town with the given ID is not found
+}
+
+
 
 
 

@@ -5,7 +5,7 @@ Grid::Grid():  cells(GRID_WIDTH, std::vector<Cell>(GRID_HEIGHT)) {}
 
 // Method to check if a cell is occupied
 
-bool Grid::isCellOccupied(int x, int y, Cell::Type type) const {
+bool Grid::isCellOccupiedByType(int x, int y, Cell::Type type) const {
     return cells[x][y].type == type;
 }
 
@@ -24,5 +24,5 @@ int Grid::getHeight() const {
 }
 
 bool Grid::canSpawnTown(int x, int y) {
-    return !Grid::isCellOccupied(x, y, Cell::Type::TOWN);
+    return !Grid::isCellOccupiedByType(x, y, Cell::Type::TOWN);
 }

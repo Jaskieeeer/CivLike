@@ -19,6 +19,8 @@ private:
 public:
     Town(int x, int y, Player* owner);
     Player* getOwner() const;
+    int getX() const;
+    int getY() const;
     void setOwner(Player* player);
     void addBuilding(const Building& building);
     void produceResources();
