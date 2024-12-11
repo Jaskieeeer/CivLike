@@ -11,7 +11,6 @@ Unit::Unit(int x, int y, Player *player)
         attackPower=0;
         defense=0;
         movementSpeed=0;
-        owner=player;
     }
 
 
