@@ -2,6 +2,8 @@
 #include <iostream>
 #include <algorithm>
 #include "../include/Settler.h"
+#include "../include/Grid.h"
+#include "../include/Globals.h"
 int Player::playerIdCounter = 0;
 Player::Player(std::string name, Civilization* civ)
     : name(name), civilization(civ), gold(civ->getStartingGold()) {
@@ -9,6 +11,7 @@ Player::Player(std::string name, Civilization* civ)
     }
 
 void Player::addUnit(Unit* unit) {
+    
     units.push_back(unit);
 }
 
@@ -18,6 +21,17 @@ void Player::removeUnit(int unitId) {
             delete *it;
             units.erase(it);
             break;
+        }
+    }
+}
+
+void Player::cleanupUnits() {
+    for (auto it = units.begin(); it != units.end();) {
+        if ((*it)->isMarkedForDeletion()) {
+            delete *it;
+            it = units.erase(it);
+        } else {
+            ++it;
         }
     }
 }
@@ -51,6 +65,7 @@ void Player::loseTown(Town* town, Player* conqueror) {
     if(conqueror!=nullptr){
         conqueror->addTown(town);
         town->setOwner(conqueror);
+        globalGrid.setCell(town->getX(), town->getY() , Cell::Type::TOWN, town->getTownId(),conqueror->getPlayerID());
     }
 }
 

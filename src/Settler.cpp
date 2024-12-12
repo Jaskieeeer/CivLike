@@ -6,18 +6,18 @@
 
 Settler::Settler(int x, int y, Player* player)
     : Unit(x, y, player) {
-        
+        globalGrid.setCell(x, y, Cell::Type::SETTLER, id,player->getPlayerID());
         health=100;
         attackPower=10;
         defense=5;
-        movementSpeed=2;
+        movementSpeed=3;
     }
 
 void Settler::transformIntoTown(Player* player) {
     if (globalGrid.canSpawnTown(x,y)) {
         Town* newTown = new Town(getX(), getY(), player);  // Dynamically allocate a new Town
         player->addTown(newTown);  // Add the new town to the player's town list
-        globalGrid.setCell(x, y, Cell::Type::TOWN, newTown->getTownId());  // Update the grid
+        globalGrid.setCell(x, y, Cell::Type::TOWN, newTown->getTownId(),player->getPlayerID());  // Update the grid
         player->removeUnit(getId());  // Remove the settler from the player's unit list
 
     }else{

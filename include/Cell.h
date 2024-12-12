@@ -5,13 +5,15 @@ struct Cell {
     enum class Type {
         EMPTY,
         TOWN,
-        UNIT
+        SETTLER,
+        WARRIOR
     };
 
     Type type;
     int id;
+    int playerId;
 
-    Cell() : type(Type::EMPTY), id(0) {}
+    Cell() : type(Type::EMPTY), id(0),playerId(0) {}
 };
 
 #endif // CELL_H

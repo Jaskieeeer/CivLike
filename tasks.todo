@@ -1,8 +1,12 @@
 #TODO
-
-add all recourses as zero when initiating player
-basic UI and game logic 
 organize methods in some order
+add consistant spawning 
+add garrisons
 add 3 more civs
 add more units
-add dying, conquering and killing mechanics
+add buildings
+add conquering conditions
+add all recourses as zero when initiating player
+game loop
+move options
+AI???

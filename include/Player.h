@@ -34,7 +34,7 @@ public:
 
     void transformUnitIntoTown(int unitID);  // Transform a settler unit into a town
 
-
+    void cleanupUnits();
     void addTown(Town* town);  // Add a town to the player's list
     void loseTown(Town* town,Player* player = nullptr);  // Remove a town from the player's list
 

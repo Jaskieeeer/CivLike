@@ -2,10 +2,12 @@
 #include <iostream>
 #include "../include/Globals.h"
 #include "../include/Player.h"
+#include "../include/Grid.h"
 #include <cmath>
 int Unit::idCounter = 0;  
 Unit::Unit(int x, int y, Player *player)
     :x(x),y(y),owner(player){
+        
         id=++idCounter;
         health=0;
         attackPower=0;
@@ -22,7 +24,7 @@ void Unit::setMovementSpeed(int speed) {
 void Unit::move(int dx, int dy) {
     int distanceTravelled = std::sqrt(std::pow(dx,2) + std::pow(dy,2));
     if (distanceTravelled > movementSpeed - usedMovementSpeed) {
-        std::cout << "Cannot move that far!" << std::endl;
+        std::cout << "too far, not enough MS!" << std::endl;
         return;
     }
     if (x + dx < 0 || x + dx >= globalGrid.getWidth() || y + dy < 0 || y + dy >= globalGrid.getHeight()) {
@@ -30,8 +32,10 @@ void Unit::move(int dx, int dy) {
         return;
     }
     usedMovementSpeed += distanceTravelled;
+    globalGrid.moveUnit(x, y, x + dx, y + dy);
     x += dx;
     y += dy;
+
 }
 
 void Unit::attack(Unit& target) {
@@ -47,6 +51,10 @@ void Unit::attack(Unit& target) {
     int damage = attackPower - target.getDefense();
     if (damage > 0) {
         target.defend(damage);
+        if (target.isMarkedForDeletion()){
+            this->move(target.getX()-x,target.getY()-y);
+        }
+        
         std::cout << "Attacked unit! Target health: " << target.health << std::endl;
     }
 }
@@ -54,7 +62,10 @@ void Unit::attack(Unit& target) {
 void Unit::defend(int damage) {
     health -= damage;
     if (health <= 0) {
+
         owner->removeUnit(id);
+        markedForDeletion = true;
+        globalGrid.setCell(x, y, Cell::Type::EMPTY, 0, 0);
     }
 }
 

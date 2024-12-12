@@ -16,6 +16,7 @@ protected:
     int usedMovementSpeed = 0; 
     bool didAttack = false;
     Player* owner;  // Pointer to the player who owns the town
+    bool markedForDeletion = false;  // Flag to mark the unit for deletion
 
 
 public:
@@ -36,6 +37,7 @@ public:
     virtual int getMovementSpeed() const; // Getter for movement speed
     virtual int getUsedMovementSpeed() const; // Getter for used movement speed 
     virtual void resetTurn(); // Reset movement and attack status at the end of a turn
+    bool isMarkedForDeletion() const { return markedForDeletion; }
     virtual ~Unit() {} // Virtual destructor to ensure proper cleanup of derived class objects
 
 };

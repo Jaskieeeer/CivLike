@@ -8,6 +8,7 @@
 #include "../include/RomanCiv.h"
 #include "../include/Settler.h"
 #include "../include/globals.h"
+#include "../include/Warrior.h"
 std::vector<std::pair<int, int>> generateSpawnPoints(int numPlayers, int gridWidth, int gridHeight) 
     {
         std::vector<std::pair<int, int>> spawnPoints;
@@ -24,7 +25,7 @@ std::vector<std::pair<int, int>> generateSpawnPoints(int numPlayers, int gridWid
     }
 int main() {
     std::srand(std::time(0)); // Seed for random number generation
-
+    std::cout<<globalGrid.getWidth();
     TurnManager turnManager;
     Player player1("Alice", new RomanCiv());
     Player player2("Bob", new RomanCiv());
@@ -32,19 +33,36 @@ int main() {
     player1.addUnit(new Settler (spawnPoints[0].first, spawnPoints[0].second,&player1));
     player2.addUnit(new Settler (spawnPoints[1].first, spawnPoints[1].second,&player2)); 
     bool isGameOver = false;
-    player1.displayInfo();
-    player2.displayInfo();
 
+    globalGrid.displayAsciiArt();
     player1.transformUnitIntoTown(1);
-    player1.displayInfo();
-    player1.getTown(1)->displayTownStatus();
+    globalGrid.displayAsciiArt();
     player1.loseTown(player1.getTown(1),&player2);
+    globalGrid.displayAsciiArt();
+     
+    
+    player1.addUnit(new Settler ( 5,5,&player1));
+    player2.addUnit(new Warrior ( 4,4,&player2));
+    globalGrid.displayAsciiArt();
+
+    Unit* attacker = player2.getUnit(globalGrid.getUnitId(4,4));
+    Unit* defender = player1.getUnit(globalGrid.getUnitId(5,5));
+    attacker->attack(*defender);
+    attacker->resetTurn();
+    attacker->attack(*defender);
+    player1.cleanupUnits();  // Clean up dead units
+    player2.cleanupUnits();  // Clean up dead units
+    
+    globalGrid.displayAsciiArt();
+    globalGrid.displayAsciiArt();
+    std::cout << "Player 1's units: " << player1.getUnits().size() << std::endl;    
     player1.displayInfo();
     player2.displayInfo();
-    player1.addUnit(new Settler ( spawnPoints[0].first, spawnPoints[0].second,&player1));
-    player1.displayInfo();
-    player1.transformUnitIntoTown(3);
-    player1.displayInfo();
+    globalGrid.displayAsciiArt();
+
+     
+    // Colored ASCII Art
+
     // game loop
     // while (!isGameOver) {
     //     std::cout << "Player " << turnManager.getCurrentPlayer() << "'s turn\n";
