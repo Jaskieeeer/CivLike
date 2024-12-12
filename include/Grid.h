@@ -17,7 +17,7 @@ public:
     int getWidth() const;
     int getHeight() const;
     bool canSpawnTown(int x, int y);
-    void displayAsciiArt() const;
+    void displayAsciiArt(const std::vector<std::pair<int, int>>& playerPositions);
     bool moveUnit(int fromX, int fromY, int toX, int toY);
 };
 

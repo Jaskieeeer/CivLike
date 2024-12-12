@@ -1,6 +1,7 @@
 #ifndef UNIT_H
 #define UNIT_H
 
+#include <string>
 class Player;  // Forward declaration
 
 
@@ -24,10 +25,10 @@ public:
     virtual Player* getOwner() const;
     virtual void setOwner(Player* player);
     virtual void setMovementSpeed(int speed); // Setter for movement speed
-    virtual void move(int dx, int dy); // Virtual to allow overriding
-    virtual void attack(Unit& target); // Make this method virtual for polymorphism
+    virtual std::string move(int dx, int dy); // Virtual to allow overriding
+    virtual std::string attack(Unit& target); // Make this method virtual for polymorphism
     virtual void defend(int damage); // Reduce health by damage
-    virtual void displayStatus();  // For debugging
+    virtual void displayStatus() const;  // For debugging
     virtual int getX() const;  // Getter for x coordinate
     virtual int getY() const;  // Getter for y coordinate
     virtual int getId() const; // Getter for unit ID

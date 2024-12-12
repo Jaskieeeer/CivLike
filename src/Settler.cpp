@@ -26,6 +26,10 @@ void Settler::transformIntoTown(Player* player) {
     
 }
 
+void Settler::displayStatus() const {
+    std::cout << "Settler unit " << id << " at (" << x << ", " << y << ") with health " << health << ". Movement speed left: "<< movementSpeed-usedMovementSpeed<<std::endl;
+}
+
 
 bool Settler::isSettler() const {
     return true; // This is a Settler

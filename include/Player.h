@@ -40,7 +40,7 @@ public:
 
     void addResource(std::string resourceName, int amount);  // Add resource to the player's stock
     void spendResource(std::string resourceName, int amount);   // Spend resources (decrease stock)
- 
+    bool hasSettlersOrTowns();  // Check if the player has any settlers or towns
 
 
     // Getters
@@ -53,7 +53,9 @@ public:
     Unit* getUnit(int unitID) const;
     const std::vector<Town*>& getTowns() const;
     Town* getTown(int townID) const;
-
+    std::vector<std::pair<int, int>> getPositions() const;
+    void printPositions() const;
+    void displayUnitStatus() const;
     void displayInfo() const;
 
 

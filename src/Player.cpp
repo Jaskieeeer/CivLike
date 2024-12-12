@@ -35,7 +35,15 @@ void Player::cleanupUnits() {
         }
     }
 }
-
+bool Player::hasSettlersOrTowns() {
+    for (Unit* unit : units) {
+        Settler* settler = dynamic_cast<Settler*>(unit);
+        if (settler != nullptr) {
+            return true;
+        }
+    }
+    return !towns.empty();
+}
 void Player::transformUnitIntoTown(int unitID) {
     // Get the unit by ID
     Unit* unit = getUnit(unitID);
@@ -54,6 +62,27 @@ void Player::transformUnitIntoTown(int unitID) {
         // The unit was not found
         std::cout << "Unit with ID " << unitID << " not found." << std::endl;
     }
+}
+
+std::vector<std::pair<int, int>> Player::getPositions() const {
+    std::vector<std::pair<int, int>> positions;
+    for (Unit* unit : units) {
+        positions.push_back(std::make_pair(unit->getX(), unit->getY()));
+    }
+    for (Town* town : towns) {
+        positions.push_back(std::make_pair(town->getX(), town->getY()));
+    }
+    return positions;
+}
+
+void Player::printPositions() const{
+    for (Unit* unit : units) {
+        std::cout << "(" << unit->getX() << ", " << unit->getY() << ") ";
+    }
+    for (Town* town : towns) {
+        std::cout << "(" << town->getX() << ", " << town->getY() << ") ";
+    }
+    std::cout << std::endl;
 }
 
 void Player::addTown(Town* town) {
@@ -126,7 +155,11 @@ Town* Player::getTown(int townID) const {
 }
 
 
-
+void Player::displayUnitStatus() const {
+    for (Unit* unit : units) {
+        unit->displayStatus();
+    }
+}
 
 
 void Player::displayInfo() const {

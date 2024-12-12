@@ -21,42 +21,40 @@ void Unit::setMovementSpeed(int speed) {
     movementSpeed = speed;
 }
 
-void Unit::move(int dx, int dy) {
+std::string Unit::move(int dx, int dy) {
     int distanceTravelled = std::sqrt(std::pow(dx,2) + std::pow(dy,2));
     if (distanceTravelled > movementSpeed - usedMovementSpeed) {
-        std::cout << "too far, not enough MS!" << std::endl;
-        return;
+        return "too far, not enough MS!";
     }
     if (x + dx < 0 || x + dx >= globalGrid.getWidth() || y + dy < 0 || y + dy >= globalGrid.getHeight()) {
-        std::cout << "Cannot move outside the grid!" << std::endl;
-        return;
+        return"Cannot move outside the grid\n";
     }
+
     usedMovementSpeed += distanceTravelled;
     globalGrid.moveUnit(x, y, x + dx, y + dy);
     x += dx;
     y += dy;
-
+    return "";
 }
 
-void Unit::attack(Unit& target) {
+std::string Unit::attack(Unit& target) {
     if (didAttack) {
-        std::cout << "Unit has already attacked this turn!" << std::endl;
-        return;
+        return "Unit has already attacked this turn! \n";
     }
     if (std::abs(x - target.getX()) > 1 || std::abs(y - target.getY()) > 1) {
-        std::cout << "Target is out of range!" << std::endl;
-        return;
+        return "Target is out of range! \n";
     }
     didAttack = true;
-    int damage = attackPower - target.getDefense();
+    int damage = attackPower *(1- target.getDefense()*0.01);
     if (damage > 0) {
         target.defend(damage);
         if (target.isMarkedForDeletion()){
             this->move(target.getX()-x,target.getY()-y);
         }
         
-        std::cout << "Attacked unit! Target health: " << target.health << std::endl;
+        return "Attacked unit! Target health: " + std::to_string(target.health) + "\n";
     }
+    return "No damage dealt! \n";
 }
 
 void Unit::defend(int damage) {
@@ -110,7 +108,7 @@ void Unit::resetTurn() {
     didAttack = false;
 }
 
-void Unit::displayStatus() {
-    std::cout << "Unit ID: " << id << " at (" << x << ", " << y << ") with health: " << health << std::endl;
+void Unit::displayStatus() const{
+    std::cout << "Unit ID: " << id << " at (" << x << ", " << y << ") with health: " << health << ". Movement speed left: "<< movementSpeed-usedMovementSpeed<<std::endl;
 }
 

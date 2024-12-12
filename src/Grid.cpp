@@ -3,6 +3,7 @@
 #include "../include/Globals.h"
 #include "../include/Cell.h"
 #include <cstdlib>
+#include <cmath>
 // Constructor (optional in this case as we initialize in the header)
 Grid::Grid():  cells(GRID_WIDTH, std::vector<Cell>(GRID_HEIGHT)) {}
 
@@ -61,26 +62,55 @@ bool Grid::moveUnit(int fromX, int fromY, int toX, int toY) {
 }
 
 
-void Grid::displayAsciiArt() const {
-    for (int y = 0; y < getHeight(); ++y) {
-        for (int x = 0; x < getWidth(); ++x) {
-            char symbol = ' '; // Default symbol for empty cells
-            switch (cells[x][y].type) {
-                case Cell::Type::EMPTY: symbol = '.'; break;  // Empty cell
-                case Cell::Type::TOWN: symbol = 'T'; break;  // Town
-                case Cell::Type::WARRIOR: symbol = 'W'; break;  // Warrior
-                case Cell::Type::SETTLER: symbol = 'S'; break;  // Settler
-                default: symbol = '?'; break;               // Unknown type
+void Grid::displayAsciiArt(const std::vector<std::pair<int, int>>& playerPositions)  {
+        const int visionRadius = 4;
+        for (int y = 0; y < getHeight(); ++y) {
+            for (int x = 0; x < getWidth(); ++x) {
+                char symbol = '?';  // Default symbol for unknown cells
+                std::string color = "\033[0m";  // Default color
+
+                // Check if the current tile is within range of any player's position
+                bool isVisible = false;
+                for (const auto& pos : playerPositions) {
+                    int playerX = pos.first;
+                    int playerY = pos.second;
+
+                    // Calculate the distance between the player and the current tile
+                    int dx = std::abs(x - playerX);
+                    int dy = std::abs(y - playerY);
+                    double distance = std::sqrt(dx * dx + dy * dy);
+
+                    // If the tile is within the vision range, it's visible
+                    if (distance <= visionRadius) {
+                        isVisible = true;
+                        break;
+                    }
+                }
+
+                // If the tile is visible, set the symbol based on the cell type
+                if (isVisible) {
+                    switch (cells[x][y].type) {
+                        case Cell::Type::EMPTY: symbol = '.'; break;
+                        case Cell::Type::TOWN: symbol = 'T'; break;
+                        case Cell::Type::WARRIOR: symbol = 'W'; break;
+                        case Cell::Type::SETTLER: symbol = 'S'; break;
+                        default: symbol = '?'; break;
+                    }
+
+                    // Set color based on playerId
+                    switch (cells[x][y].playerId) {
+                        case 1: color = "\033[1;34m"; break;  // Player 1 (Blue)
+                        case 2: color = "\033[1;31m"; break;  // Player 2 (Red)
+                        default: color = "\033[0m"; break;    // Reset
+                    }
+                }
+
+                // Print the symbol with appropriate color
+                std::cout << color << symbol << "  ";
             }
-            std::string color = "";
-            switch (cells[x][y].playerId) {
-                case 1: color = "\033[1;34m"; break;  // Red
-                case 2: color = "\033[1;31m"; break;  // Blue
-                default: color = "\033[0m"; break;    // Reset
-            }
-            std::cout << color << symbol << "  ";
+            std::cout << std::endl;
         }
-        std::cout<< std::endl;
-    }
-    std::cout<< std::endl;
-}
+        std::cout << std::endl;
+    
+    
+};

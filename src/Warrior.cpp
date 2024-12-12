@@ -16,9 +16,12 @@ Warrior::Warrior(int x, int y, Player* player)
 
 
 
-
+void Warrior::displayStatus() const {
+    std::cout << "Warrior unit " << id << " at (" << x << ", " << y << ") with health " << health << ". Movement speed left: "<< movementSpeed-usedMovementSpeed<<". Unit used attack: "<< didAttack<< std::endl;
+}
 
 
 bool Warrior::isWarrior() const {
     return true; // This is a Settler
 }
+
