@@ -23,7 +23,7 @@ public:
     std::vector<std::string> getActions() const override; // Override the base class method to add the transform action
     bool isSettler() const override; // Override the base class method to indicate this is a settler
     bool isWarrior() const override; // Override the base class method to indicate this is not a warrior
-
+    int getCost() const override { return 50; } // Override the base class method to set the cost of the settler
     
 };
 

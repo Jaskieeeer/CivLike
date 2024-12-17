@@ -36,6 +36,7 @@ public:
     virtual int getHealth() const; // Getter for health
     virtual int getAttack() const; // Getter for attack power
     virtual int getDefense() const; // Getter for defense
+    virtual int getCost() const; // Pure virtual method to get the cost of the unit
     virtual int getMovementSpeed() const; // Getter for movement speed
     virtual int getUsedMovementSpeed() const; // Getter for used movement speed 
     virtual void resetTurn(); // Reset movement and attack status at the end of a turn

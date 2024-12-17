@@ -6,13 +6,18 @@
 #include "../include/Globals.h"
 int Player::playerIdCounter = 0;
 Player::Player(std::string name, Civilization* civ)
-    : name(name), civilization(civ), gold(civ->getStartingGold()) {
+    : name(name), civilization(civ), gold(civ->getStartingGold()), goldIncome(0) {
     playerID = ++playerIdCounter;
+    
     }
 
 void Player::addUnit(Unit* unit) {
-    
-    units.push_back(unit);
+    if (gold >= unit->getCost()) {
+        units.push_back(unit);
+        gold -= unit->getCost();
+    } else {
+        std::cout << "Not enough gold to add unit!" << std::endl;
+    }
 }
 
 void Player::removeUnit(int unitId) {
@@ -45,21 +50,16 @@ bool Player::hasSettlersOrTowns() {
     return !towns.empty();
 }
 void Player::transformUnitIntoTown(int unitID) {
-    // Get the unit by ID
     Unit* unit = getUnit(unitID);
     if (unit != nullptr) {
-        // Try to cast the Unit pointer to a Settler pointer
         Settler* settler = dynamic_cast<Settler*>(unit);
         if (settler != nullptr) {
-            // If successful, call transformIntoTown
             settler->transformIntoTown(this);
            
         } else {
-            // The unit exists, but is not a Settler
             std::cout << "Unit with ID " << unitID << " is not a Settler and cannot transform into a town." << std::endl;
         }
     } else {
-        // The unit was not found
         std::cout << "Unit with ID " << unitID << " not found." << std::endl;
     }
 }
@@ -87,6 +87,7 @@ void Player::printPositions() const{
 
 void Player::addTown(Town* town) {
     towns.push_back(town);
+    updateIncome();
 }
 
 void Player::loseTown(Town* town, Player* conqueror) {
@@ -95,20 +96,21 @@ void Player::loseTown(Town* town, Player* conqueror) {
         conqueror->addTown(town);
         town->setOwner(conqueror);
         globalGrid.setCell(town->getX(), town->getY() , Cell::Type::TOWN, town->getTownId(),conqueror->getPlayerID());
+        updateIncome();
     }
 }
 
-void Player::addResource(std::string resourceName, int amount) {
-    resources[resourceName] += amount;
+void Player::updateIncome() {
+    goldIncome = 0;
+    for (Town* town : towns) {
+        goldIncome += town->getIncome();
+    }
 }
 
-void Player::spendResource(std::string resourceName, int amount) {
-    if (resources[resourceName] < amount) {
-        std::cout << "Insufficient " << resourceName << " to spend " << amount << std::endl;
-        return;
-    }
-    resources[resourceName] -= amount;
+void Player::updateGold() {
+    gold += goldIncome;
 }
+
 
 int Player::getPlayerID() const {
     return playerID;
@@ -122,9 +124,7 @@ Civilization* Player::getCivilization() const {
     return civilization;
 }
 
-const std::unordered_map<std::string, int>& Player::getResources() const {
-    return resources;
-}
+
 
 const std::vector<Unit*>& Player::getUnits() const {
     return units;
@@ -158,6 +158,11 @@ Town* Player::getTown(int townID) const {
 void Player::displayUnitStatus() const {
     for (Unit* unit : units) {
         unit->displayStatus();
+    }
+}
+void Player::displayTownStatus() const {
+    for (Town* town : towns) {
+        town->displayTownStatus();
     }
 }
 

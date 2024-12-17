@@ -2,12 +2,8 @@
 organize methods in some order
 AI???
 
-na dzisiaj:
--tile based actions
--towns building units for a cost
 na jutro:
 -it
--towns building buildings for a cost but then getting profit
 na czwartek:
 -ekonomia
 -additional unity 
@@ -16,3 +12,10 @@ na piątek:
 -add conquering conditions
 -limit tile choice to visible ones
 -attack back when attacked
+-add x turns to spawn
+
+File IO
+Unit tests
+template
+destructors
+polymorphism?

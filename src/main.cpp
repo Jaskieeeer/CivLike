@@ -109,6 +109,28 @@ int main() {
                     if (globalGrid.getOwner(x, y) == turnManager.getCurrentPlayer().getPlayerID()) {
                         std::cout << "You have selected:\n";
                         turnManager.getCurrentPlayer().getTown(globalGrid.getUnitId(x, y))->displayTownStatus();
+                        Town *town = turnManager.getCurrentPlayer().getTown(globalGrid.getUnitId(x, y));
+                        town->getActions();
+                        std::string action;
+                        std::cin >> action;
+                        if (action == "s")
+                        {
+                            turnManager.skipTurn();
+                            isTurnSkipped = true;
+                            continue;
+                        }
+                        if (action == "p")
+                        {
+                            continue;
+                        }
+                        std::string addMessage = turnManager.performAction(action, town);
+                        if (addMessage == "skip"){
+                            turnManager.skipTurn();
+                            isTurnSkipped = true;
+                            continue;
+                        }
+                        message +=  addMessage;
+
                         
                     } else {
                         message += "this is enemy Town:";
@@ -130,7 +152,7 @@ int main() {
                             isTurnSkipped = true;
                             continue;
                         }
-                        if (action == "b")
+                        if (action == "p")
                         {
                             continue;
                         }
@@ -159,7 +181,7 @@ int main() {
             
         }
 
-        turnManager.nextTurn();
+        turnManager.nextPlayer();
     }
     
     return 0;

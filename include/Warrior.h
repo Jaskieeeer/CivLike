@@ -14,7 +14,7 @@ public:
     int getMovementSpeed() const override { return 5; }
     void displayStatus() const override;  
     bool isWarrior() const override ; // Override the base class method to indicate this is a settler
-
+    int getCost() const override { return 100; } // Override the base class method to set the cost of the settler
     
 };
 

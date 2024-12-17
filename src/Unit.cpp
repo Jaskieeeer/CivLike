@@ -36,7 +36,9 @@ std::string Unit::move(int dx, int dy) {
     y += dy;
     return "";
 }
-
+int Unit::getCost() const {
+    return 0;  // Default cost for a generic unit
+}
 std::string Unit::attack(Unit& target) {
     if (didAttack) {
         return "Unit has already attacked this turn! \n";
@@ -70,7 +72,7 @@ void Unit::defend(int damage) {
 std::vector<std::string> Unit::getActions() const {
     std::vector<std::string> actions;
     actions.push_back("Skip(s)");
-    actions.push_back("Back(b)");
+    actions.push_back("Previous(p)");
     if (movementSpeed - usedMovementSpeed >= 1) {
         actions.push_back("Move(m)");
     }

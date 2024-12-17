@@ -5,6 +5,7 @@
 #include "Building.h"
 #include "Unit.h"
 #include <string>
+#include <utility>
 
 class Player;  // Forward declaration
 
@@ -14,8 +15,8 @@ private:
     int townID;          // Unique ID for the player  
     int x, y;  // Coordinates on the grid
     std::vector<Building> buildings;
-    std::vector<Unit*> garrison; // Units stationed in the town
     Player* owner;  // Pointer to the player who owns the town
+    int income;
 public:
     Town(int x, int y, Player* owner);
     Player* getOwner() const;
@@ -23,8 +24,13 @@ public:
     int getY() const;
     void setOwner(Player* player);
     void addBuilding(const Building& building);
-    void produceResources();
+    void getActions();
+    void getBuildingActions();
+    void getUnitActions();
+    std::vector<Building> getBuildings();
+    std::pair<int, int> getSpawnCoordinates() const;
     void displayTownStatus(); // For debugging or displaying town details
+    int getIncome() const;  // Getter for income
     int getTownId() const;  // Getter for town ID
     void spawnUnit(std::string unitType, Player * player);  // Spawn a unit
 };

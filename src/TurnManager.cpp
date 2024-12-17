@@ -35,21 +35,28 @@ Player& TurnManager::getOpponentPlayer() const {
 }
 
 
-
 void TurnManager::nextTurn() {
-    if (alternator == 0){
-        alternator++;
-    }else{
-        alternator = 0;
-        currentTurn++;
-
-    }
+    currentTurn++;
     for (const auto &unit : getCurrentPlayer().getUnits()) {
         unit->resetTurn();
     }
     for (const auto &unit : getOpponentPlayer().getUnits()) {
         unit->resetTurn();
     }
+    getCurrentPlayer().updateGold();
+    getOpponentPlayer().updateGold();
+}
+
+
+void TurnManager::nextPlayer() {
+    if (alternator == 0){
+        alternator++;
+    }else{
+        alternator = 0;
+        nextTurn();
+
+    }
+    
     
     if (isTurnSkipped) {
         if (currentPlayer == 1) {
@@ -144,6 +151,42 @@ std::string TurnManager::performAction(std::string input, Unit *unit) {
     }
     return message;
 }
+
+std::string TurnManager::performAction(std::string input, Town *town) {
+    std::string message = "";
+    if (input == "s"){
+        return "skip";
+    }
+    else if(input== "b"){
+        std::string buildingType;
+        std::cout<<"Enter building type :\n-Barracks(b)\n-Farm(f)\n-Market(m)\n";
+        std::cin>>buildingType;
+        if (buildingType == "b") {
+            town->addBuilding(Building(Building::Type::Barracks));
+            message += "Built a Barracks! \n";
+        } else if (buildingType == "f") {
+            town->addBuilding(Building(Building::Type::Farm));
+            message += "Built a Farm! \n";
+        } else if (buildingType == "m") {
+            town->addBuilding(Building(Building::Type::Market));
+            message += "Built a Market! \n";
+        } else {
+            message += "Invalid building type! \n";
+        }
+    }
+    else if(input== "u"){
+        std::string unitType;
+        std::cout<<"Enter unit type:\n-Settler(s)\n-Warrior(w)\n";
+        std::cin>>unitType;
+        town->spawnUnit(unitType, &getCurrentPlayer());
+    }
+    else {
+        // Handle other cases if needed
+    }
+    return message;
+}
+
+
 int TurnManager::getCurrentTurn() const {
     return currentTurn;
 }
@@ -153,4 +196,5 @@ void TurnManager::displayStatus() {
     std::cout << "Current player: " << currentPlayer << " Current turn: "<< currentTurn << std::endl;
     getCurrentPlayer().displayInfo();   
     getCurrentPlayer().displayUnitStatus();
+    getCurrentPlayer().displayTownStatus();
 }

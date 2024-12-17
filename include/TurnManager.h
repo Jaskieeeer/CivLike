@@ -18,8 +18,11 @@ public:
     int getCurrentTurn() const;     // Method to get the current turn number
     void skipTurn();      // Method to skip the current player's turn
     void nextTurn();      // Method to switch to the next player, possibly skipping
+    void nextPlayer();
     void displayStatus();
     std::string performAction(std::string input, Unit *unit);
+    std::string performAction(std::string input, Town *town);
+
 };
 
 #endif // TURNMANAGER_H
