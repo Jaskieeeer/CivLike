@@ -112,22 +112,7 @@ int main() {
 
         turnManager.nextTurn();
     }
-    //     // Simulate a player action (for now, just a message)
-    //     std::cout << "Player " << turnManager.getCurrentPlayer() << " is taking action...\n";
-        
-    //     // Skip turn logic for demonstration (could be based on conditions in your game)
-    //     if (turnManager.getCurrentPlayer() == 1) {
-    //         turnManager.skipTurn();  // For example, skip Player 1's turn
-    //     }
-
-    //     turnManager.nextTurn();  // Move to the next player's turn
-
-    //     // Simulate game over condition (this is just an example, you'll have your own game logic)
-    //     if (false /* replace with actual game over condition */) {
-    //         isGameOver = true;
-    //     }
-    // }
-
+    
     return 0;
 }
 
