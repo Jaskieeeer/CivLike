@@ -13,8 +13,7 @@ public:
     int getDefense() const override { return 25; }
     int getMovementSpeed() const override { return 5; }
     void displayStatus() const override;  
-    bool isWarrior() const; // Override the base class method to indicate this is a settler
-    
+    bool isWarrior() const override ; // Override the base class method to indicate this is a settler
 
     
 };

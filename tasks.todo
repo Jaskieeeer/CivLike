@@ -1,12 +1,18 @@
 #TODO
 organize methods in some order
-add income
-add consistant spawning 
-add garrisons
-add 3 more civs
-add more units
-add buildings
-add conquering conditions
-add all recourses as zero when initiating player
-add horses and iron
 AI???
+
+na dzisiaj:
+-tile based actions
+-towns building units for a cost
+na jutro:
+-it
+-towns building buildings for a cost but then getting profit
+na czwartek:
+-ekonomia
+-additional unity 
+na piątek:
+-final tweaks
+-add conquering conditions
+-limit tile choice to visible ones
+-attack back when attacked

@@ -2,6 +2,7 @@
 #define UNIT_H
 
 #include <string>
+#include <vector>
 class Player;  // Forward declaration
 
 
@@ -38,6 +39,10 @@ public:
     virtual int getMovementSpeed() const; // Getter for movement speed
     virtual int getUsedMovementSpeed() const; // Getter for used movement speed 
     virtual void resetTurn(); // Reset movement and attack status at the end of a turn
+    virtual std::vector<std::string> getActions() const; // Get a list of possible actions
+    void displayActions() const; // Display the list of possible actions
+    virtual bool isSettler() const {return false;} // Indicate if this is a settler
+    virtual bool isWarrior() const {return false;} // Indicate if this is a warrior
     bool isMarkedForDeletion() const { return markedForDeletion; }
     virtual ~Unit() {} // Virtual destructor to ensure proper cleanup of derived class objects
 

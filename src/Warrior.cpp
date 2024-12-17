@@ -22,6 +22,7 @@ void Warrior::displayStatus() const {
 
 
 bool Warrior::isWarrior() const {
-    return true; // This is a Settler
+    return true; 
 }
+
 

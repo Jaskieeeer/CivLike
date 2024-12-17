@@ -37,17 +37,43 @@ int Grid::getUnitId(int x, int y) const {
     return cells[x][y].id;
 }
 
+int Grid::getOwner(int x, int y) const {
+    return cells[x][y].playerId;
+}
+
+
 bool Grid::canSpawnTown(int x, int y) {
     return !Grid::isCellOccupiedByType(x, y, Cell::Type::TOWN);
 }
 
+bool Grid::canAttackNeighbour(int x, int y, int playerId) {
+    for (int dx = -1; dx <= 1; ++dx) {
+        for (int dy = -1; dy <= 1; ++dy) {
+            if (dx == 0 && dy == 0) {
+                continue; 
+            }
+
+            int neighbourX = x + dx;
+            int neighbourY = y + dy;
+
+            if (neighbourX < 0 || neighbourX >= GRID_WIDTH || neighbourY < 0 || neighbourY >= GRID_HEIGHT) {
+                continue; 
+            }
+
+            if (cells[neighbourX][neighbourY].playerId != playerId) {
+                return true; 
+            }
+        }
+    }
+
+    return false; 
+}
+
 bool Grid::moveUnit(int fromX, int fromY, int toX, int toY) {
-    // Check bounds
     if (toX < 0 || toX >= GRID_WIDTH || toY < 0 || toY >= GRID_HEIGHT) {
         return false; // Out of bounds
     }
 
-    // Check if destination is occupied or not walkable
 
     for (const Cell::Type& unitType : unitTypes) {
         if (cells[toX][toY].type == unitType) {
@@ -55,7 +81,6 @@ bool Grid::moveUnit(int fromX, int fromY, int toX, int toY) {
         }
     }
 
-    // Perform movement
     cells[toX][toY] = cells[fromX][fromY]; // Copy unit data
     cells[fromX][fromY] = Cell(); // Clear previous cell
     return true;
@@ -63,54 +88,58 @@ bool Grid::moveUnit(int fromX, int fromY, int toX, int toY) {
 
 
 void Grid::displayAsciiArt(const std::vector<std::pair<int, int>>& playerPositions)  {
-        const int visionRadius = 4;
-        for (int y = 0; y < getHeight(); ++y) {
-            for (int x = 0; x < getWidth(); ++x) {
-                char symbol = '?';  // Default symbol for unknown cells
-                std::string color = "\033[0m";  // Default color
+    const int visionRadius = 4;
 
-                // Check if the current tile is within range of any player's position
-                bool isVisible = false;
-                for (const auto& pos : playerPositions) {
-                    int playerX = pos.first;
-                    int playerY = pos.second;
+    std::cout << "  "; 
+    for (int x = 0; x < getWidth(); ++x) {
+        std::cout << x % 10 << "  "; 
+    }
+    std::cout << std::endl;
 
-                    // Calculate the distance between the player and the current tile
-                    int dx = std::abs(x - playerX);
-                    int dy = std::abs(y - playerY);
-                    double distance = std::sqrt(dx * dx + dy * dy);
+    for (int y = 0; y < getHeight(); ++y) {
+       
+        std::cout << y % 10 << " "; 
 
-                    // If the tile is within the vision range, it's visible
-                    if (distance <= visionRadius) {
-                        isVisible = true;
-                        break;
-                    }
+        for (int x = 0; x < getWidth(); ++x) {
+            char symbol = '?';  
+            std::string color = "\033[0m"; 
+
+            bool isVisible = false;
+            for (const auto& pos : playerPositions) {
+                int playerX = pos.first;
+                int playerY = pos.second;
+
+                int dx = std::abs(x - playerX);
+                int dy = std::abs(y - playerY);
+                double distance = std::sqrt(dx * dx + dy * dy);
+
+                if (distance <= visionRadius) {
+                    isVisible = true;
+                    break;
                 }
-
-                // If the tile is visible, set the symbol based on the cell type
-                if (isVisible) {
-                    switch (cells[x][y].type) {
-                        case Cell::Type::EMPTY: symbol = '.'; break;
-                        case Cell::Type::TOWN: symbol = 'T'; break;
-                        case Cell::Type::WARRIOR: symbol = 'W'; break;
-                        case Cell::Type::SETTLER: symbol = 'S'; break;
-                        default: symbol = '?'; break;
-                    }
-
-                    // Set color based on playerId
-                    switch (cells[x][y].playerId) {
-                        case 1: color = "\033[1;34m"; break;  // Player 1 (Blue)
-                        case 2: color = "\033[1;31m"; break;  // Player 2 (Red)
-                        default: color = "\033[0m"; break;    // Reset
-                    }
-                }
-
-                // Print the symbol with appropriate color
-                std::cout << color << symbol << "  ";
             }
-            std::cout << std::endl;
+
+            if (isVisible) {
+                switch (cells[x][y].type) {
+                    case Cell::Type::EMPTY: symbol = '.'; break;
+                    case Cell::Type::TOWN: symbol = 'T'; break;
+                    case Cell::Type::WARRIOR: symbol = 'W'; break;
+                    case Cell::Type::SETTLER: symbol = 'S'; break;
+                    default: symbol = '?'; break;
+                }
+
+                switch (cells[x][y].playerId) {
+                    case 1: color = "\033[1;34m"; break; 
+                    case 2: color = "\033[1;31m"; break;  
+                    default: color = "\033[0m"; break;    
+                }
+            }
+
+            std::cout << color << symbol << "  ";
         }
-        std::cout << std::endl;
-    
-    
-};
+
+        std::cout << "\033[0m" << std::endl;
+    }
+
+    std::cout << std::endl;
+}

@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
+#include <sstream>
 #include "../include/Grid.h"
 #include "../include/TurnManager.h"
 #include "../include/Player.h"
@@ -23,8 +25,10 @@ std::vector<std::pair<int, int>> generateSpawnPoints(int numPlayers, int gridWid
 
         return spawnPoints;
     }
+
+
 int main() {
-    std::srand(std::time(0)); // Seed for random number generation
+    std::srand(std::time(0)); 
     std::cout<<globalGrid.getWidth();
     
     
@@ -35,45 +39,7 @@ int main() {
     player1.addUnit(new Settler (spawnPoints[0].first, spawnPoints[0].second,&player1));
     player2.addUnit(new Settler (spawnPoints[1].first, spawnPoints[1].second,&player2)); 
     bool isGameOver = false;
-
-    globalGrid.displayAsciiArt(player1.getPositions());
-    player1.transformUnitIntoTown(1);
-    globalGrid.displayAsciiArt(player1.getPositions());
-    player1.loseTown(player1.getTown(1),&player2);
-    globalGrid.displayAsciiArt(player1.getPositions());
-     
-
-    player1.addUnit(new Settler ( 5,5,&player1));
-    player2.addUnit(new Warrior ( 4,4,&player2));
-    globalGrid.displayAsciiArt(player1.getPositions());
-
-    Unit* attacker = player2.getUnit(globalGrid.getUnitId(4,4));
-    Unit* defender = player1.getUnit(globalGrid.getUnitId(5,5));
-    attacker->attack(*defender);
-    attacker->resetTurn();
-    attacker->attack(*defender);
-    player1.cleanupUnits();  // Clean up dead units
-    player2.cleanupUnits();  // Clean up dead units
-    player1.displayInfo();
-    player2.displayInfo();
-    globalGrid.displayAsciiArt(player2.getPositions());
-    globalGrid.displayAsciiArt(player1.getPositions());
-    std::cout << "Player 1's units: " << player1.getUnits().size() << std::endl;    
-
-    player1.addUnit(new Settler ( 5,7,&player1));
-    player1.displayInfo();
-    globalGrid.displayAsciiArt(player1.getPositions());
-    player2.displayInfo();
-    for (const auto& pos : player2.getPositions()) {
-        std::cout << "(" << pos.first << ", " << pos.second << ") ";
-    }
-
-    std::cout << std::endl;
-    globalGrid.displayAsciiArt(player2.getPositions());
-
-     
     std::string message = "";
-    // game loop
     while (!isGameOver) {
         if (!turnManager.getCurrentPlayer().hasSettlersOrTowns()) {
             isGameOver = true;
@@ -83,19 +49,21 @@ int main() {
         std::cout << "Player " << turnManager.getCurrentPlayer().getPlayerID() << "'s turn\n";
         bool isTurnSkipped = false;
         while(!isTurnSkipped){
-            for (int i = 0; i < 100; ++i) std::cout << "\n";  // Clear the console
+            for (int i = 0; i < 100; ++i) std::cout << "\n";  // "wyczyszczenie konsoli"
             std::cout<<"info: \n"<<message<<std::endl;
             message = "";
             turnManager.displayStatus();
             std::cout << "Player " << turnManager.getCurrentPlayer().getPlayerID() << " is taking action...\n";
 
-            std::cout << "Possible actions: \n - move\n - attack\n - skip turn (s)\n - give up (ff)\n";
+            std::cout << "-Skip a turn(s)\n-give up(ff)\n-Chose a tile(c)\n";
             std::string input;
             std::cin >> input;
+    
             if (input == "s") 
             {
                 turnManager.skipTurn();
                 isTurnSkipped = true;
+                continue;
             } 
             else if (input == "ff") 
             {
@@ -103,10 +71,91 @@ int main() {
                 std::cout << "Player " << turnManager.getOpponentPlayer().getPlayerID() << " wins!\n";
                 break;
             } 
-            else 
+            else if (input == "c") 
             {
-                message = turnManager.performAction(input);
-            }
+                int x,y;
+                int _ = 0;
+                while (true) {
+                    if (_!=0)
+                    {
+                        std::cout << "Enter tiles coordinates (x y) (or 's' to skip): ";
+                    }
+                    std::getline(std::cin, input); 
+
+                    if (input == "s")
+                    {
+                        isTurnSkipped = true;
+                        break;
+                    }
+                    std::istringstream iss(input);
+                    if (iss >> x >> y) { 
+                        break; 
+                    } else if( _!=0) {
+                        std::cout <<"Invalid input. Please enter two integers or 's' to stop.\n";
+                    }
+                    if (_ == 0){
+                        _++;
+                    }
+                }
+                if (isTurnSkipped) {
+                    continue;
+                }
+                if (x < 0 || x >= globalGrid.getWidth() || y < 0 || y >= globalGrid.getHeight()) {
+                    message += "Invalid coordinates\n";
+                    continue;
+                }
+                Cell::Type type = globalGrid.getCellType(x, y);
+                if (type == Cell::Type::TOWN){
+                    if (globalGrid.getOwner(x, y) == turnManager.getCurrentPlayer().getPlayerID()) {
+                        std::cout << "You have selected:\n";
+                        turnManager.getCurrentPlayer().getTown(globalGrid.getUnitId(x, y))->displayTownStatus();
+                        
+                    } else {
+                        message += "this is enemy Town:";
+                        continue;
+                    } 
+                } 
+                else if (std::find(unitTypes.begin(), unitTypes.end(), type) != unitTypes.end()) 
+                {
+                    if (globalGrid.getOwner(x, y) == turnManager.getCurrentPlayer().getPlayerID()) {
+                        std::cout << "You have selected:\n";
+                        turnManager.getCurrentPlayer().getUnit(globalGrid.getUnitId(x, y))->displayStatus();
+                        Unit *unit = turnManager.getCurrentPlayer().getUnit(globalGrid.getUnitId(x, y));
+                        unit->displayActions();
+                        std::string action;
+                        std::cin >> action;
+                        if (action == "s")
+                        {
+                            turnManager.skipTurn();
+                            isTurnSkipped = true;
+                            continue;
+                        }
+                        if (action == "b")
+                        {
+                            continue;
+                        }
+                        std::string addMessage = turnManager.performAction(action, unit);
+                        if (addMessage == "skip"){
+                            turnManager.skipTurn();
+                            isTurnSkipped = true;
+                            continue;
+                        }
+                        message +=  addMessage;
+
+                    } else {
+                        message += "this is enemy unit:";
+                        continue;
+                    } 
+                } 
+                else if (type == Cell::Type::EMPTY) 
+                {
+                    message += "this is empty tile:";
+                    continue;
+                } 
+                
+                
+            } 
+            
             
         }
 

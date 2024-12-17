@@ -13,6 +13,12 @@ Settler::Settler(int x, int y, Player* player)
         movementSpeed=3;
     }
 
+std::vector<std::string> Settler::getActions() const {
+    std::vector<std::string> actions = Unit::getActions();
+    actions.push_back("Transform into town(t)");
+    return actions;
+}
+
 void Settler::transformIntoTown(Player* player) {
     if (globalGrid.canSpawnTown(x,y)) {
         Town* newTown = new Town(getX(), getY(), player);  // Dynamically allocate a new Town
@@ -33,4 +39,8 @@ void Settler::displayStatus() const {
 
 bool Settler::isSettler() const {
     return true; // This is a Settler
+}
+
+bool Settler::isWarrior() const {
+    return false; // This is not a Warrior
 }

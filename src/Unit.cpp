@@ -51,7 +51,7 @@ std::string Unit::attack(Unit& target) {
         if (target.isMarkedForDeletion()){
             this->move(target.getX()-x,target.getY()-y);
         }
-        
+        this->usedMovementSpeed = movementSpeed;
         return "Attacked unit! Target health: " + std::to_string(target.health) + "\n";
     }
     return "No damage dealt! \n";
@@ -67,6 +67,27 @@ void Unit::defend(int damage) {
     }
 }
 
+std::vector<std::string> Unit::getActions() const {
+    std::vector<std::string> actions;
+    actions.push_back("Skip(s)");
+    actions.push_back("Back(b)");
+    if (movementSpeed - usedMovementSpeed >= 1) {
+        actions.push_back("Move(m)");
+    }
+    if (!didAttack && globalGrid.canAttackNeighbour(x, y, owner->getPlayerID())) {
+        actions.push_back("Attack(a)");
+    }
+    return actions;
+}
+
+void Unit::displayActions() const {
+    std::vector<std::string> actions = getActions();
+    std::cout << "Possible actions: ";
+    for (const auto& action : actions) {
+        std::cout << action << " ";
+    }
+    std::cout << std::endl;
+}
 
 Player* Unit::getOwner() const {
     return owner;
@@ -107,6 +128,7 @@ void Unit::resetTurn() {
     usedMovementSpeed = 0;
     didAttack = false;
 }
+
 
 void Unit::displayStatus() const{
     std::cout << "Unit ID: " << id << " at (" << x << ", " << y << ") with health: " << health << ". Movement speed left: "<< movementSpeed-usedMovementSpeed<<std::endl;
