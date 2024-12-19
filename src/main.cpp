@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
+#include <fstream>
+#include <ctime>
 #include <sstream>
 #include "../include/Grid.h"
 #include "../include/TurnManager.h"
@@ -11,6 +13,38 @@
 #include "../include/Settler.h"
 #include "../include/globals.h"
 #include "../include/Warrior.h"
+
+
+void writeMatchResult(const std::string& result) {
+    std::ofstream file("./match_history.txt", std::ios::app); 
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << "match_history.txt" << std::endl;
+        return;
+    }
+
+    std::time_t now = std::time(nullptr);
+    char buf[100];
+    std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
+
+    file << result << " on " << buf << std::endl;
+
+    file.close();
+}
+
+void displayMatchHistory() {
+    std::ifstream file("./match_history.txt");
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << "match_history.txt" << std::endl;
+        return;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::cout << line << std::endl;
+    }
+
+    file.close();
+}
 std::vector<std::pair<int, int>> generateSpawnPoints(int numPlayers, int gridWidth, int gridHeight) 
     {
         std::vector<std::pair<int, int>> spawnPoints;
@@ -29,8 +63,25 @@ std::vector<std::pair<int, int>> generateSpawnPoints(int numPlayers, int gridWid
 
 int main() {
     std::srand(std::time(0)); 
-    std::cout<<globalGrid.getWidth();
-    
+    std::string input;
+    std::cout << "play(p) show match history(h) exit(e)\n";
+    std::cin >> input;
+    if (input == "e") {
+        return 0;
+    }
+    else if (input == "h") {
+        std::cout << "Match history:\n";
+        displayMatchHistory();
+        std::cout << "play(p) exit(e)\n";
+        std::cin >> input;
+        if (input == "e") {
+            return 0;
+        }
+    }
+    if (input != "p") {
+        std::cout << "Invalid input\n";
+        return 0;
+    }
     
     Player player1("Alice", new RomanCiv());
     Player player2("Bob", new RomanCiv());
@@ -38,15 +89,17 @@ int main() {
     std::vector<std::pair<int, int>> spawnPoints = generateSpawnPoints(2, globalGrid.getWidth(), globalGrid.getHeight());
     player1.addUnit(new Settler (spawnPoints[0].first, spawnPoints[0].second,&player1));
     player2.addUnit(new Settler (spawnPoints[1].first, spawnPoints[1].second,&player2)); 
+    turnManager.nextTurn();
     bool isGameOver = false;
     std::string message = "";
     while (!isGameOver) {
         if (!turnManager.getCurrentPlayer().hasSettlersOrTowns()) {
             isGameOver = true;
-            std::cout << "Player " << turnManager.getOpponentPlayer().getPlayerID() << " wins!\n";
+            std::string result = "Player " + std::to_string(turnManager.getOpponentPlayer().getPlayerID()) + " wins!";
+            std::cout << result << std::endl;
+            writeMatchResult(result);
             break;
         }
-        std::cout << "Player " << turnManager.getCurrentPlayer().getPlayerID() << "'s turn\n";
         bool isTurnSkipped = false;
         while(!isTurnSkipped){
             for (int i = 0; i < 100; ++i) std::cout << "\n";  // "wyczyszczenie konsoli"
@@ -68,7 +121,9 @@ int main() {
             else if (input == "ff") 
             {
                 isGameOver = true;
-                std::cout << "Player " << turnManager.getOpponentPlayer().getPlayerID() << " wins!\n";
+                std::string result = "Player " + std::to_string(turnManager.getOpponentPlayer().getPlayerID()) + " wins!";
+                std::cout << result << std::endl;
+                writeMatchResult(result);
                 break;
             } 
             else if (input == "c") 
@@ -102,6 +157,10 @@ int main() {
                 }
                 if (x < 0 || x >= globalGrid.getWidth() || y < 0 || y >= globalGrid.getHeight()) {
                     message += "Invalid coordinates\n";
+                    continue;
+                }
+                if(!globalGrid.isVisible(x, y, turnManager.getCurrentPlayer().getPositions())){
+                    message += "Tile is not visible\n";
                     continue;
                 }
                 Cell::Type type = globalGrid.getCellType(x, y);

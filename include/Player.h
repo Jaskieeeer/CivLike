@@ -50,6 +50,8 @@ public:
     Unit* getUnit(int unitID) const;
     const std::vector<Town*>& getTowns() const;
     Town* getTown(int townID) const;
+    int getGold() const;
+    void setGold(int gold);
     std::vector<std::pair<int, int>> getPositions() const;
     void updateIncome();
     void updateGold();

@@ -5,6 +5,7 @@
 #include "Building.h"
 #include "Unit.h"
 #include <string>
+#include <queue>
 #include <utility>
 
 class Player;  // Forward declaration
@@ -17,22 +18,30 @@ private:
     std::vector<Building> buildings;
     Player* owner;  // Pointer to the player who owns the town
     int income;
+    int health;
+    std::queue<std::pair<std::string, int>> unitQueue;  
+    std::queue<std::pair<Building, int>> buildingQueue;  
+    
 public:
     Town(int x, int y, Player* owner);
     Player* getOwner() const;
     int getX() const;
     int getY() const;
+    int getHealth() const;
     void setOwner(Player* player);
-    void addBuilding(const Building& building);
+    bool addBuilding(const Building& building,int turns);
     void getActions();
     void getBuildingActions();
     void getUnitActions();
+    void defend(int damage, Player* attacker);
     std::vector<Building> getBuildings();
     std::pair<int, int> getSpawnCoordinates() const;
     void displayTownStatus(); // For debugging or displaying town details
     int getIncome() const;  // Getter for income
     int getTownId() const;  // Getter for town ID
-    void spawnUnit(std::string unitType, Player * player);  // Spawn a unit
+    void buildBuilding(const Building& building);  // Build a building
+    std::string spawnUnit(std::string unitType, Player * player);  // Spawn a unit
+    void update();  // Update the town state
 };
 
 #endif // TOWN_H

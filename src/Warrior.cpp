@@ -12,6 +12,8 @@ Warrior::Warrior(int x, int y, Player* player)
         attackPower=80;
         defense=25;
         movementSpeed=5;
+        usedMovementSpeed = movementSpeed;
+        didAttack = true;
     }
 
 

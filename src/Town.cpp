@@ -12,11 +12,25 @@
 #include <Globals.h>
 int Town::townIdCounter = 0;
 
-Town::Town(int x, int y, Player *player) : x(x), y(y), owner(player),income(100) {
+Town::Town(int x, int y, Player *player) : x(x), y(y), owner(player),income(100),health(500) {
     townID = ++townIdCounter;
 }
 
-void Town::addBuilding(const Building& building) {
+bool Town::addBuilding(const Building& building,int turns) {
+    if(owner->getGold() >= building.getCost() && std::find_if(buildings.begin(), buildings.end(), [building](const Building& b) {
+        return b.getType() == building.getType();
+    }) == buildings.end()) {
+        owner->setGold(owner->getGold() - building.getCost());
+    }
+    else{
+        return false;
+    }
+    buildingQueue.push(std::make_pair(building, turns));
+
+    return true;
+}
+
+void Town::buildBuilding(const Building& building) {
     buildings.push_back(building);
     income += building.getIncome();
     owner->updateIncome();
@@ -29,7 +43,12 @@ void Town::getActions(){
     std::cout<<"Build a unit(u)\n";
     
 }
-
+void Town::defend(int damage, Player* attacker) {
+    health -= damage;
+    if (health <= 0) {
+        owner->loseTown(this,attacker);
+    }
+}
 void Town::getBuildingActions() {
     for (Building::Type type: {Building::Type::Barracks, Building::Type::Farm, Building::Type::Market}) {
         if(std::find_if(buildings.begin(), buildings.end(), [type](const Building& building) {
@@ -41,10 +60,10 @@ void Town::getBuildingActions() {
 }
 
 void Town::getUnitActions() {
-    std::cout << "Build: Settler(s)" << std::endl;
+    std::cout << "Build: Settler(s) - 50g" << std::endl;
     for(auto building : buildings){
         if(building.getType() == Building::Type::Barracks){
-            std::cout << "Build: Warrior(w)" << std::endl;
+            std::cout << "Build: Warrior(w) - 150g" << std::endl;
         }
     }
 }
@@ -65,6 +84,24 @@ void Town::displayTownStatus() {
         std::cout << Building::buildingTypeToString(building.getType()) << std::endl;
     }  
     }
+    if(unitQueue.size() > 0){
+        std::queue<std::pair<std::string, int>> q_copy = unitQueue;
+        std::cout << "Units in queue: " << std::endl;
+        while (!q_copy.empty()) {
+            std::cout << q_copy.front().first << " " << q_copy.front().second <<" turns left"<< std::endl;
+            q_copy.pop();
+        }
+    }
+    if(buildingQueue.size() > 0){
+        std::queue<std::pair<Building, int>> q_copy = buildingQueue;
+        std::cout << "Buildings in queue: " << std::endl;
+        while (!q_copy.empty()) {
+            std::cout << Building::buildingTypeToString(q_copy.front().first.getType()) << " " << q_copy.front().second <<" turns left"<< std::endl;
+            q_copy.pop();
+        }
+    }
+    
+    
 }
 
 Player* Town::getOwner() const {
@@ -89,6 +126,10 @@ void Town::setOwner(Player* player) {
 
 int Town::getTownId() const {
     return townID;
+}
+
+int Town::getHealth() const {
+    return health;
 }
 
 std::pair<int, int> Town::getSpawnCoordinates() const {
@@ -136,24 +177,62 @@ std::pair<int, int> Town::getSpawnCoordinates() const {
 
     return bestCell;
 }
-void Town::spawnUnit(std::string unitType , Player* player) {
-    int spawnX, spawnY;
-    std::tie(spawnX, spawnY) = getSpawnCoordinates();
+std::string Town::spawnUnit(std::string unitType , Player* player) {
     if(unitType == "s"){
-        player->addUnit(new Settler(spawnX,spawnY,player)); 
+        if (player->getGold() >= 50) {
+            player->setGold(player->getGold() - 50);
+        }
+        else {
+            return "Insufficient funds! \n";
+        }
+        unitQueue.push(std::make_pair("settler",3));
+        return "Added Settler to queue! \n";
     }
     else if(unitType == "w"){
         if (std::find_if(buildings.begin(), buildings.end(), [](const Building& building) {
             return building.getType() == Building::Type::Barracks;
         }) == buildings.end()) {
-            std::cout << "Barracks not found! Cannot build a warrior." << std::endl;
-            return;
+            return "Barracks not found! \n";
         }
-        player->addUnit(new Warrior(spawnX,spawnY,player));
+        if (player->getGold() >= 150) {
+            player->setGold(player->getGold() - 150);
+        }
+        else {
+            return "Insufficient funds! \n";
+        }
+        unitQueue.push(std::make_pair("warrior",2));
+        return "Added Warrior to queue! \n";
+
     }
     
     else{
-        std::cout << "Invalid unit type!" << std::endl;
+        return "Invalid unit type! \n";
     }
 
+}
+
+void Town::update() {
+    if (!buildingQueue.empty()) {
+        auto& [building, turns] = buildingQueue.front();
+        if (--turns == 0) {
+            buildBuilding(building);
+            buildingQueue.pop();
+        }
+    }
+    if(!unitQueue.empty()){
+        auto& [unitType, turns] = unitQueue.front();
+        if(--turns == 0){
+            int spawnX, spawnY;
+            std::tie(spawnX, spawnY) = getSpawnCoordinates();
+            if(unitType == "settler"){
+                Settler* settler = new Settler(spawnX,spawnY, owner);
+                owner->addUnit(settler);
+            }
+            else if(unitType == "warrior"){
+                Warrior* warrior = new Warrior(spawnX,spawnY, owner);
+                owner->addUnit(warrior);
+            }
+            unitQueue.pop();
+        }
+    }
 }

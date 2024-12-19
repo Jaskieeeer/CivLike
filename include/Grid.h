@@ -2,8 +2,8 @@
 #define GRID_H
 #include "Cell.h"
 #include <vector>
-const int GRID_WIDTH = 20;
-const int GRID_HEIGHT = 20;
+const int GRID_WIDTH = 10;
+const int GRID_HEIGHT = 10;
 
 class Grid {
 private:
@@ -20,6 +20,7 @@ public:
     bool canSpawnTown(int x, int y);
     bool canAttackNeighbour(int x, int y, int playerId);
     void displayAsciiArt(const std::vector<std::pair<int, int>>& playerPositions);
+    bool isVisible(int x, int y, const std::vector<std::pair<int, int>>& playerPositions);
     bool moveUnit(int fromX, int fromY, int toX, int toY);
 };
 

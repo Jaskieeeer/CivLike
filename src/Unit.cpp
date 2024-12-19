@@ -21,20 +21,23 @@ void Unit::setMovementSpeed(int speed) {
     movementSpeed = speed;
 }
 
-std::string Unit::move(int dx, int dy) {
+bool Unit::move(int dx, int dy) {
+    if (globalGrid.getCellType(x + dx, y + dy) != Cell::Type::EMPTY) {
+        return false;
+    }
     int distanceTravelled = std::sqrt(std::pow(dx,2) + std::pow(dy,2));
     if (distanceTravelled > movementSpeed - usedMovementSpeed) {
-        return "too far, not enough MS!";
+        return false;
     }
     if (x + dx < 0 || x + dx >= globalGrid.getWidth() || y + dy < 0 || y + dy >= globalGrid.getHeight()) {
-        return"Cannot move outside the grid\n";
+        return false;
     }
 
     usedMovementSpeed += distanceTravelled;
     globalGrid.moveUnit(x, y, x + dx, y + dy);
     x += dx;
     y += dy;
-    return "";
+    return true;
 }
 int Unit::getCost() const {
     return 0;  // Default cost for a generic unit
@@ -48,13 +51,32 @@ std::string Unit::attack(Unit& target) {
     }
     didAttack = true;
     int damage = attackPower *(1- target.getDefense()*0.01);
+    int retaliation = target.getAttack()*(1-defense*0.01)/2;
     if (damage > 0) {
         target.defend(damage);
+        this->defend(retaliation);
         if (target.isMarkedForDeletion()){
             this->move(target.getX()-x,target.getY()-y);
         }
         this->usedMovementSpeed = movementSpeed;
-        return "Attacked unit! Target health: " + std::to_string(target.health) + "\n";
+        return "Attacked unit! Target health: " + std::to_string(target.health) + " Your health:"+ std::to_string(health)+"\n";
+    }
+    return "No damage dealt! \n";
+}
+
+std::string Unit::attack(Town& target) {
+    if (didAttack) {
+        return "Unit has already attacked this turn! \n";
+    }
+    if (std::abs(x - target.getX()) > 1 || std::abs(y - target.getY()) > 1) {
+        return "Target is out of range! \n";
+    }
+    didAttack = true;
+    int damage = attackPower *(0.5);
+    if (damage > 0) {
+        target.defend(damage,owner);
+        this->usedMovementSpeed = movementSpeed;
+        return "Attacked town! Town health: " + std::to_string(target.getHealth()) + "\n";
     }
     return "No damage dealt! \n";
 }

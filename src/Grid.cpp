@@ -86,9 +86,26 @@ bool Grid::moveUnit(int fromX, int fromY, int toX, int toY) {
     return true;
 }
 
+bool Grid::isVisible(int x, int y, const std::vector<std::pair<int, int>>& playerPositions) {
+    const int visionRadius = 3;
+
+    for (const auto& pos : playerPositions) {
+        int playerX = pos.first;
+        int playerY = pos.second;
+
+        int dx = std::abs(x - playerX);
+        int dy = std::abs(y - playerY);
+        double distance = std::sqrt(dx * dx + dy * dy);
+
+        if (distance <= visionRadius) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 void Grid::displayAsciiArt(const std::vector<std::pair<int, int>>& playerPositions)  {
-    const int visionRadius = 4;
 
     std::cout << "  "; 
     for (int x = 0; x < getWidth(); ++x) {
@@ -104,22 +121,10 @@ void Grid::displayAsciiArt(const std::vector<std::pair<int, int>>& playerPositio
             char symbol = '?';  
             std::string color = "\033[0m"; 
 
-            bool isVisible = false;
-            for (const auto& pos : playerPositions) {
-                int playerX = pos.first;
-                int playerY = pos.second;
+            bool isV = isVisible(x, y, playerPositions);
+            
 
-                int dx = std::abs(x - playerX);
-                int dy = std::abs(y - playerY);
-                double distance = std::sqrt(dx * dx + dy * dy);
-
-                if (distance <= visionRadius) {
-                    isVisible = true;
-                    break;
-                }
-            }
-
-            if (isVisible) {
+            if (isV) {
                 switch (cells[x][y].type) {
                     case Cell::Type::EMPTY: symbol = '.'; break;
                     case Cell::Type::TOWN: symbol = 'T'; break;

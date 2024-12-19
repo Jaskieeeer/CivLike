@@ -11,6 +11,8 @@ Settler::Settler(int x, int y, Player* player)
         attackPower=10;
         defense=5;
         movementSpeed=3;
+        usedMovementSpeed = movementSpeed;
+        didAttack = true;
     }
 
 std::vector<std::string> Settler::getActions() const {

@@ -12,12 +12,7 @@ Player::Player(std::string name, Civilization* civ)
     }
 
 void Player::addUnit(Unit* unit) {
-    if (gold >= unit->getCost()) {
-        units.push_back(unit);
-        gold -= unit->getCost();
-    } else {
-        std::cout << "Not enough gold to add unit!" << std::endl;
-    }
+    units.push_back(unit);
 }
 
 void Player::removeUnit(int unitId) {
@@ -88,6 +83,14 @@ void Player::printPositions() const{
 void Player::addTown(Town* town) {
     towns.push_back(town);
     updateIncome();
+}
+
+int Player::getGold() const {
+    return gold;
+}
+
+void Player::setGold(int gold) {
+    this->gold = gold;
 }
 
 void Player::loseTown(Town* town, Player* conqueror) {

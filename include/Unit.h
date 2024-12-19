@@ -3,9 +3,9 @@
 
 #include <string>
 #include <vector>
+#include "Town.h"
 class Player;  // Forward declaration
-
-
+class Town;
 class Unit {
 protected:
     static int idCounter;  // Static counter for generating unique IDs
@@ -26,8 +26,9 @@ public:
     virtual Player* getOwner() const;
     virtual void setOwner(Player* player);
     virtual void setMovementSpeed(int speed); // Setter for movement speed
-    virtual std::string move(int dx, int dy); // Virtual to allow overriding
+    virtual bool move(int dx, int dy); // Virtual to allow overriding
     virtual std::string attack(Unit& target); // Make this method virtual for polymorphism
+    virtual std::string attack(Town& target); // Overload for attacking towns
     virtual void defend(int damage); // Reduce health by damage
     virtual void displayStatus() const;  // For debugging
     virtual int getX() const;  // Getter for x coordinate

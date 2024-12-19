@@ -10,7 +10,7 @@
 
 TurnManager::TurnManager(Player* p1, Player* p2)
 : player1(p1), player2(p2), currentPlayer(1), isTurnSkipped(false) {
-    currentTurn = 1;
+    currentTurn = 0;
     alternator = 0;
 }
 
@@ -37,6 +37,13 @@ Player& TurnManager::getOpponentPlayer() const {
 
 void TurnManager::nextTurn() {
     currentTurn++;
+    for (const auto &town : getCurrentPlayer().getTowns()) {
+        town->update();
+    }
+    for (const auto &town : getOpponentPlayer().getTowns()) {
+        town->update();
+    }
+
     for (const auto &unit : getCurrentPlayer().getUnits()) {
         unit->resetTurn();
     }
@@ -107,9 +114,10 @@ std::string TurnManager::performAction(std::string input, Unit *unit) {
     
 
         if (unit) {
-            if (globalGrid.moveUnit(unit->getX(), unit->getY(), x, y)) {
-                unit->move(x - unit->getX(), y - unit->getY());
-            } else {
+            if(unit->move(x - unit->getX(), y - unit->getY())){
+                globalGrid.moveUnit(unit->getX(), unit->getY(), x, y);
+            }
+             else {
                 message+= "Invalid move!\n";
             }
         } 
@@ -132,7 +140,13 @@ std::string TurnManager::performAction(std::string input, Unit *unit) {
                 message +=  "defender not found! \n";
             }
         }else if(globalGrid.getCellType(x, y) == Cell::Type::TOWN){
-            message += "attack a town! \n";
+            Unit *attacker = unit;
+            Town* town = getOpponentPlayer().getTown(globalGrid.getUnitId(x, y));
+            if (attacker && town) {
+                message += attacker->attack(*town);
+            } else {
+                message += "town not found! \n";
+            }
         }else{
             message += "Invalid target! \n";
         }
@@ -159,17 +173,27 @@ std::string TurnManager::performAction(std::string input, Town *town) {
     }
     else if(input== "b"){
         std::string buildingType;
-        std::cout<<"Enter building type :\n-Barracks(b)\n-Farm(f)\n-Market(m)\n";
+        std::cout<<"Enter building type :\n-Barracks(b) - 250g\n-Farm(f) - 150g\n-Market(m) - 300g\n";
         std::cin>>buildingType;
         if (buildingType == "b") {
-            town->addBuilding(Building(Building::Type::Barracks));
-            message += "Built a Barracks! \n";
+            if(town->addBuilding(Building(Building::Type::Barracks),2)){
+                message += "Added Barracks to queue! \n";
+            }else{
+                message += "Barracks already built or insufficient funds \n";
+            }
+            
         } else if (buildingType == "f") {
-            town->addBuilding(Building(Building::Type::Farm));
-            message += "Built a Farm! \n";
+            if(town->addBuilding(Building(Building::Type::Farm),2)){
+                message += "Added Farm to queue! \n";
+            }else{
+                message += "Farm already built or insufficient funds \n";
+            }
         } else if (buildingType == "m") {
-            town->addBuilding(Building(Building::Type::Market));
-            message += "Built a Market! \n";
+            if(town->addBuilding(Building(Building::Type::Market),4)){
+                message += "Added Market to queue! \n";
+            }else{
+                message += "Market already built or insufficient funds \n";
+            }
         } else {
             message += "Invalid building type! \n";
         }
@@ -178,7 +202,7 @@ std::string TurnManager::performAction(std::string input, Town *town) {
         std::string unitType;
         std::cout<<"Enter unit type:\n-Settler(s)\n-Warrior(w)\n";
         std::cin>>unitType;
-        town->spawnUnit(unitType, &getCurrentPlayer());
+        message += town->spawnUnit(unitType, &getCurrentPlayer());
     }
     else {
         // Handle other cases if needed
