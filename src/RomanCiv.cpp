@@ -3,7 +3,7 @@
 
 RomanCiv::RomanCiv() {
     name = "Roman Empire";  
-    starting_gold = 1000;
+    starting_gold = 300;
 
 }
 

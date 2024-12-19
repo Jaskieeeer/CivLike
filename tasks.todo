@@ -2,13 +2,11 @@
 organize methods in some order
 AI???
 
-na jutro:
+
 -it
-na czwartek:
+
 -ekonomia
 -additional unity 
-na piątek:
--final tweaks
 -add conquering conditions
 -limit tile choice to visible ones
 -attack back when attacked
@@ -18,4 +16,3 @@ File IO
 Unit tests
 template
 destructors
-polymorphism?
