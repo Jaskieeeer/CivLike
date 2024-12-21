@@ -4,16 +4,13 @@
 #include "../include/Cell.h"
 #include <cstdlib>
 #include <cmath>
-// Constructor (optional in this case as we initialize in the header)
 Grid::Grid():  cells(GRID_WIDTH, std::vector<Cell>(GRID_HEIGHT)) {}
 
-// Method to check if a cell is occupied
 
 bool Grid::isCellOccupiedByType(int x, int y, Cell::Type type) const {
     return cells[x][y].type == type;
 }
 
-// Method to set the value of a cell
 void Grid::setCell(int x, int y, Cell::Type type, int id,int playerId) {
     cells[x][y].type = type;
     cells[x][y].id = id;
@@ -71,18 +68,18 @@ bool Grid::canAttackNeighbour(int x, int y, int playerId) {
 
 bool Grid::moveUnit(int fromX, int fromY, int toX, int toY) {
     if (toX < 0 || toX >= GRID_WIDTH || toY < 0 || toY >= GRID_HEIGHT) {
-        return false; // Out of bounds
+        return false;
     }
 
 
     for (const Cell::Type& unitType : unitTypes) {
         if (cells[toX][toY].type == unitType) {
-            return false; // Cell is occupied by a unit type
+            return false; 
         }
     }
 
-    cells[toX][toY] = cells[fromX][fromY]; // Copy unit data
-    cells[fromX][fromY] = Cell(); // Clear previous cell
+    cells[toX][toY] = cells[fromX][fromY]; 
+    cells[fromX][fromY] = Cell(); 
     return true;
 }
 

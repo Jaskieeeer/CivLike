@@ -8,7 +8,7 @@ INCLUDE_DIR = include
 BUILD_DIR = build
 
 # Executable name
-TARGET = $(BUILD_DIR)/game.exe
+TARGET = $ game.exe 
 
 # Source files and object files
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)

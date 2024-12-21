@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 #include "Town.h"
-class Player;  // Forward declaration
+class Player; 
 class Town;
 class Unit {
 protected:
-    static int idCounter;  // Static counter for generating unique IDs
-    int x, y;  // Coordinates on the grid
+    static int idCounter; 
+    int x, y; 
     int health;
     int attackPower; 
     int defense;
@@ -17,37 +17,36 @@ protected:
     int id;
     int usedMovementSpeed = 0; 
     bool didAttack = false;
-    Player* owner;  // Pointer to the player who owns the town
-    bool markedForDeletion = false;  // Flag to mark the unit for deletion
-
+    Player* owner;  
+    bool markedForDeletion = false;  
 
 public:
     Unit(int x, int y, Player* player);
     virtual Player* getOwner() const;
     virtual void setOwner(Player* player);
-    virtual void setMovementSpeed(int speed); // Setter for movement speed
-    virtual bool move(int dx, int dy); // Virtual to allow overriding
-    virtual std::string attack(Unit& target); // Make this method virtual for polymorphism
-    virtual std::string attack(Town& target); // Overload for attacking towns
-    virtual void defend(int damage); // Reduce health by damage
-    virtual void displayStatus() const;  // For debugging
-    virtual int getX() const;  // Getter for x coordinate
-    virtual int getY() const;  // Getter for y coordinate
-    virtual int getId() const; // Getter for unit ID
-    virtual int getHealth() const; // Getter for health
-    virtual int getAttack() const; // Getter for attack power
-    virtual int getDefense() const; // Getter for defense
-    virtual int getCost() const; // Pure virtual method to get the cost of the unit
-    virtual int getMovementSpeed() const; // Getter for movement speed
-    virtual int getUsedMovementSpeed() const; // Getter for used movement speed 
-    virtual void resetTurn(); // Reset movement and attack status at the end of a turn
-    virtual std::vector<std::string> getActions() const; // Get a list of possible actions
-    void displayActions() const; // Display the list of possible actions
-    virtual bool isSettler() const {return false;} // Indicate if this is a settler
-    virtual bool isWarrior() const {return false;} // Indicate if this is a warrior
+    virtual void setMovementSpeed(int speed); 
+    virtual bool move(int dx, int dy); 
+    virtual std::string attack(Unit& target); 
+    virtual std::string attack(Town& target); 
+    virtual void defend(int damage); 
+    virtual void displayStatus() const; 
+    virtual int getX() const; 
+    virtual int getY() const;  
+    virtual int getId() const;
+    virtual int getHealth() const; 
+    virtual int getAttack() const;
+    virtual int getDefense() const; 
+    virtual int getCost() const; 
+    virtual int getMovementSpeed() const;
+    virtual int getUsedMovementSpeed() const; 
+    virtual void resetTurn();
+    virtual std::vector<std::string> getActions() const; 
+    void displayActions() const; 
+    virtual bool isSettler() const {return false;}
+    virtual bool isWarrior() const {return false;} 
     bool isMarkedForDeletion() const { return markedForDeletion; }
-    virtual ~Unit() {} // Virtual destructor to ensure proper cleanup of derived class objects
+    virtual ~Unit(); 
 
 };
 
-#endif // UNIT_H
+#endif

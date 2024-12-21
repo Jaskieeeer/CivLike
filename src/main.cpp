@@ -83,8 +83,8 @@ int main() {
         return 0;
     }
     
-    Player player1("Alice", new RomanCiv());
-    Player player2("Bob", new RomanCiv());
+    Player player1("Jaskier", new RomanCiv());
+    Player player2("Mhynio", new RomanCiv());
     TurnManager turnManager(&player1, &player2);
     std::vector<std::pair<int, int>> spawnPoints = generateSpawnPoints(2, globalGrid.getWidth(), globalGrid.getHeight());
     player1.addUnit(new Settler (spawnPoints[0].first, spawnPoints[0].second,&player1));
@@ -95,7 +95,7 @@ int main() {
     while (!isGameOver) {
         if (!turnManager.getCurrentPlayer().hasSettlersOrTowns()) {
             isGameOver = true;
-            std::string result = "Player " + std::to_string(turnManager.getOpponentPlayer().getPlayerID()) + " wins!";
+            std::string result = "Player " + turnManager.getOpponentPlayer().getName()+ " wins!";
             std::cout << result << std::endl;
             writeMatchResult(result);
             break;
@@ -121,7 +121,7 @@ int main() {
             else if (input == "ff") 
             {
                 isGameOver = true;
-                std::string result = "Player " + std::to_string(turnManager.getOpponentPlayer().getPlayerID()) + " wins!";
+                std::string result = "Player " + turnManager.getOpponentPlayer().getName() + " wins!";
                 std::cout << result << std::endl;
                 writeMatchResult(result);
                 break;

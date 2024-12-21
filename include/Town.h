@@ -36,12 +36,12 @@ public:
     void defend(int damage, Player* attacker);
     std::vector<Building> getBuildings();
     std::pair<int, int> getSpawnCoordinates() const;
-    void displayTownStatus(); // For debugging or displaying town details
-    int getIncome() const;  // Getter for income
-    int getTownId() const;  // Getter for town ID
-    void buildBuilding(const Building& building);  // Build a building
-    std::string spawnUnit(std::string unitType, Player * player);  // Spawn a unit
-    void update();  // Update the town state
+    void displayTownStatus(); 
+    int getIncome() const; 
+    int getTownId() const;  
+    void buildBuilding(const Building& building); 
+    std::string spawnUnit(std::string unitType, Player * player);  
+    void update();  
 };
 
-#endif // TOWN_H
+#endif 

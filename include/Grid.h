@@ -24,4 +24,4 @@ public:
     bool moveUnit(int fromX, int fromY, int toX, int toY);
 };
 
-#endif // GRID_H
+#endif 

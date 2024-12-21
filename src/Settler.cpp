@@ -23,11 +23,10 @@ std::vector<std::string> Settler::getActions() const {
 
 void Settler::transformIntoTown(Player* player) {
     if (globalGrid.canSpawnTown(x,y)) {
-        Town* newTown = new Town(getX(), getY(), player);  // Dynamically allocate a new Town
-        player->addTown(newTown);  // Add the new town to the player's town list
-        globalGrid.setCell(x, y, Cell::Type::TOWN, newTown->getTownId(),player->getPlayerID());  // Update the grid
-        player->removeUnit(getId());  // Remove the settler from the player's unit list
-
+        Town* newTown = new Town(getX(), getY(), player);  
+        player->addTown(newTown);  
+        globalGrid.setCell(x, y, Cell::Type::TOWN, newTown->getTownId(),player->getPlayerID());  
+        player->removeUnit(getId());  
     }else{
         std::cout << "Cannot spawn town here!" << std::endl;
     }
@@ -40,9 +39,9 @@ void Settler::displayStatus() const {
 
 
 bool Settler::isSettler() const {
-    return true; // This is a Settler
+    return true; 
 }
 
 bool Settler::isWarrior() const {
-    return false; // This is not a Warrior
+    return false;
 }

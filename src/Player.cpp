@@ -4,12 +4,26 @@
 #include "../include/Settler.h"
 #include "../include/Grid.h"
 #include "../include/Globals.h"
+#include "../include/Gold.h"
 int Player::playerIdCounter = 0;
 Player::Player(std::string name, Civilization* civ)
-    : name(name), civilization(civ), gold(civ->getStartingGold()), goldIncome(0) {
+    : name(name), civilization(civ), gold(Gold<int>(civ->getStartingGold())), goldIncome(0) {
     playerID = ++playerIdCounter;
     
     }
+
+Player::~Player() {
+    for (Unit* unit : units) {
+        delete unit;
+    }
+    units.clear();
+
+    for (Town* town : towns) {
+        delete town;
+    }
+    towns.clear();
+
+}
 
 void Player::addUnit(Unit* unit) {
     units.push_back(unit);
@@ -86,11 +100,11 @@ void Player::addTown(Town* town) {
 }
 
 int Player::getGold() const {
-    return gold;
+    return gold.getGold();
 }
 
-void Player::setGold(int gold) {
-    this->gold = gold;
+void Player::setGold(int amount) {
+    gold.setGold(amount);    
 }
 
 void Player::loseTown(Town* town, Player* conqueror) {
@@ -111,7 +125,7 @@ void Player::updateIncome() {
 }
 
 void Player::updateGold() {
-    gold += goldIncome;
+    gold.setGold(gold.getGold() + goldIncome);
 }
 
 
@@ -135,11 +149,11 @@ const std::vector<Unit*>& Player::getUnits() const {
 
 Unit* Player::getUnit(int unitID) const{
     for (Unit* unit : units) {
-        if (unit->getId() == unitID) {  // Assuming Unit has a getID() method
+        if (unit->getId() == unitID) {  
             return unit;
         }
     }
-    return nullptr;  // Return nullptr if unit with the given ID is not found
+    return nullptr;  
 }
 
 
@@ -154,7 +168,7 @@ Town* Player::getTown(int townID) const {
             return town;
         }
     }
-    return nullptr;  // Return nullptr if town with the given ID is not found
+    return nullptr; 
 }
 
 
@@ -172,7 +186,7 @@ void Player::displayTownStatus() const {
 
 void Player::displayInfo() const {
     std::cout << "Player: " << name << "\n";
-    std::cout << "Gold: " << gold << "\n";
+    std::cout << "Gold: " << gold.getGold() << "\n";
     std::cout << "Towns: " << towns.size() << "\n";
     std::cout << "Units: " << units.size() << "\n";
     if (civilization) {

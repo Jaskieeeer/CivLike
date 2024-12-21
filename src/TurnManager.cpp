@@ -13,10 +13,13 @@ TurnManager::TurnManager(Player* p1, Player* p2)
     currentTurn = 0;
     alternator = 0;
 }
-
+TurnManager::~TurnManager() {
+    delete player1;
+    delete player2;
+}
 
 void TurnManager::skipTurn() {
-    isTurnSkipped = true;  // Set flag to skip the turn
+    isTurnSkipped = true;  
 }
 
 Player& TurnManager::getCurrentPlayer() const {
@@ -71,7 +74,7 @@ void TurnManager::nextPlayer() {
         } else {
             currentPlayer = 1;
         }
-        isTurnSkipped = false;  // Reset the skip flag
+        isTurnSkipped = false;  
     } else {
         if (currentPlayer == 1) {
             currentPlayer = 2;
@@ -160,9 +163,6 @@ std::string TurnManager::performAction(std::string input, Unit *unit) {
             message += "Invalid action! \n";
         }
     }
-    else {
-        // Handle other cases if needed
-    }
     return message;
 }
 
@@ -203,9 +203,6 @@ std::string TurnManager::performAction(std::string input, Town *town) {
         std::cout<<"Enter unit type:\n-Settler(s)\n-Warrior(w)\n";
         std::cin>>unitType;
         message += town->spawnUnit(unitType, &getCurrentPlayer());
-    }
-    else {
-        // Handle other cases if needed
     }
     return message;
 }

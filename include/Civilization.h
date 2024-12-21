@@ -17,4 +17,4 @@ private:
     int starting_gold;  
 };
 
-#endif // CIVILIZATION_H
+#endif 

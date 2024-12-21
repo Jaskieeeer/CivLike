@@ -102,7 +102,7 @@ void Town::displayTownStatus() {
     }
     
     
-}
+} 
 
 Player* Town::getOwner() const {
     return owner;

@@ -8,37 +8,36 @@
 #include "Town.h"
 #include "Building.h"
 #include "Civilization.h"
-
+#include "Gold.h"
 
 class Player {
 private:
-    static int playerIdCounter;  // Static counter for generating unique IDs
-    int playerID;          // Unique ID for the player
-    std::string name;      // Player's name
-    Civilization* civilization;  // Pointer to the player's civilization
-    std::vector<Unit*> units;    // List of pointers to units controlled by the player
-    std::vector<Town*> towns;    // List of pointers to towns controlled by the player
-    int gold;               // Example resource type, initially set to 0
-    int goldIncome;         // Example resource income, initially set to 0
+    static int playerIdCounter;  
+    int playerID;         
+    std::string name;    
+    Civilization* civilization; 
+    std::vector<Unit*> units;    
+    std::vector<Town*> towns;   
+    Gold<int> gold;              
+    int goldIncome;        
 public:
     
 
-    // Constructor to initialize the player with a name and a reference to their civilization
     Player(std::string name, Civilization* civ);
-
-    // Player methods
-
-    void addUnit(Unit* unit);  // Add a unit to the player's list
-    void removeUnit(int unitId);  // Remove a unit from the player's list
+    ~Player();
 
 
-    void transformUnitIntoTown(int unitID);  // Transform a settler unit into a town
+    void addUnit(Unit* unit);  
+    void removeUnit(int unitId);  
+
+
+    void transformUnitIntoTown(int unitID);
 
     void cleanupUnits();
-    void addTown(Town* town);  // Add a town to the player's list
-    void loseTown(Town* town,Player* player = nullptr);  // Remove a town from the player's list
+    void addTown(Town* town);  
+    void loseTown(Town* town,Player* player = nullptr);  
 
-    bool hasSettlersOrTowns();  // Check if the player has any settlers or towns
+    bool hasSettlersOrTowns();
 
 
     // Getters
@@ -63,4 +62,4 @@ public:
 
 };
 
-#endif // PLAYER_H
+#endif 

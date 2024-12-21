@@ -6,12 +6,12 @@
 class RomanCiv : public Civilization {
 
 public:
-    RomanCiv();  // Constructor
-    std::string getName() const override;  // Override the base class method
-    int getStartingGold() const override;  // Override the base class method
+    RomanCiv(); 
+    std::string getName() const override;  
+    int getStartingGold() const override;
 private:
-    std::string name;  // Name of the Roman civilization
-    int starting_gold;  // Starting gold for the Roman civilization
+    std::string name;  
+    int starting_gold;
 };
 
-#endif // ROMANCIV_H
+#endif

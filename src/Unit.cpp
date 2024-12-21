@@ -15,11 +15,16 @@ Unit::Unit(int x, int y, Player *player)
         movementSpeed=0;
     }
 
-
+Unit::~Unit() {
+    if (markedForDeletion && owner) {
+        owner->removeUnit(id);
+    }
+}
 
 void Unit::setMovementSpeed(int speed) {
     movementSpeed = speed;
 }
+
 
 bool Unit::move(int dx, int dy) {
     if (globalGrid.getCellType(x + dx, y + dy) != Cell::Type::EMPTY) {
@@ -40,7 +45,7 @@ bool Unit::move(int dx, int dy) {
     return true;
 }
 int Unit::getCost() const {
-    return 0;  // Default cost for a generic unit
+    return 0;  
 }
 std::string Unit::attack(Unit& target) {
     if (didAttack) {

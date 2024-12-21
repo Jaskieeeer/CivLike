@@ -6,18 +6,19 @@ class TurnManager {
 private:
     Player *player1; 
     Player *player2; 
-    int currentTurn;      // Current turn number
+    int currentTurn;      
     int alternator;
-    int currentPlayer;    // Current player (1 or 2)
-    bool isTurnSkipped;   // Flag to indicate if the turn should be skipped
+    int currentPlayer;   
+    bool isTurnSkipped;   
 
 public:
-    TurnManager(Player* p1, Player* p2);        // Constructor to initialize state
-    Player& getCurrentPlayer() const;  // Method to get a player by ID
+    TurnManager(Player* p1, Player* p2);
+    ~TurnManager();        
+    Player& getCurrentPlayer() const; 
     Player& getOpponentPlayer() const;
-    int getCurrentTurn() const;     // Method to get the current turn number
-    void skipTurn();      // Method to skip the current player's turn
-    void nextTurn();      // Method to switch to the next player, possibly skipping
+    int getCurrentTurn() const;    
+    void skipTurn();     
+    void nextTurn();     
     void nextPlayer();
     void displayStatus();
     std::string performAction(std::string input, Unit *unit);
@@ -25,4 +26,4 @@ public:
 
 };
 
-#endif // TURNMANAGER_H
+#endif 
